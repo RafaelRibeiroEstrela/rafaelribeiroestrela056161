@@ -52,8 +52,8 @@ docker system prune -a --volumes -f
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/RafaelRibeiroEstrela/Java-desafio-processo-seletivo-seplag.git
-cd seplag-api
+git clone https://github.com/RafaelRibeiroEstrela/rafaelribeiroestrela056161.git
+cd processo-seletivo-api
 ```
 
 ### 2. Suba os containers com Docker Compose
@@ -86,61 +86,11 @@ http://localhost:26000/swagger-ui.html
 
 ---
 
-## Autenticação e Segurança
-
-A aplicação utiliza OAuth token JWT para autenticação.
-
-Para realizar login, acesse o url:
-
-```
-Método: POST
-URL: http://localhost:26000/auth/login
-Request: {
-  "username":"admin",
-  "password":"12345"
-}
-```
-
-Para atualizar token, acesse o url:
-
-```
-Método: POST
-URL: http://localhost:26000/auth/refresh-token
-Request: {
-   "token":"{token}" 
-}
-```
-
-Para realizar logout, acesse a url:
-
-```
-Método: POST
-URL: http://localhost:26000/auth/logout
-Request: {
-   "token":"{token}" 
-}
-```
-
-## 📁 Upload de Arquivos
-
-Para realizar upload de fotos:
-
-```
-http://localhost:26000/upload-fotos
-```
-
-Ao realizar o upload, será retornado um json com a URL para recuperar o arquivo.
-Lembre-se que a URL irá expirar após 5 minutos.
-
-Para download, utilize a URL retornada do upload ou utilize o endpoint de download informado no Swagger.
-
----
-
 ## 🧩 Arquitetura & Padrões
 
 - Separação clara entre camadas: **Controller**, **Service**, **Repository**
 - Aplicação de princípios **SOLID**
-- Uso de **DTOs** e mapeamentos com ModelMapper (se aplicável)
+- Uso de **DTOs** e mapeamentos com ModelMapper
 - Tratamento de exceções com `@ControllerAdvice`
 - Logs com **SLF4J**
 
@@ -150,96 +100,6 @@ Para download, utilize a URL retornada do upload ou utilize o endpoint de downlo
 
 Datas devem ser informadas no padrão: dd/MM/yyyy
 Exemplo: 10/10/1990
-
-Alguns atributos são enums, utilize os valores abaixo:
-
-tipoLogradouro:
-```
-    AEROPORTO,
-    ALAMEDA,
-    AREA,
-    AVENIDA,
-    CAMPO,
-    CHACARA,
-    COLONIA,
-    CONDOMINIO,
-    CONJUNTO,
-    DISTRITO,
-    ESPLANADA,
-    ESTACAO,
-    ESTRADA,
-    FAVELA,
-    FAZENDA,
-    FEIRA,
-    JARDIM,
-    LADEIRA,
-    LAGO,
-    LAGOA,
-    LARGO,
-    LOTEAMENTO,
-    MORRO,
-    NUCLEO,
-    PARQUE,
-    PASSARELA,
-    PATIO,
-    PRACA,
-    QUADRA,
-    RECANTO,
-    RESIDENCIAL,
-    RODOVIA,
-    RUA,
-    SETOR,
-    SITIO,
-    TRAVESSA,
-    TRECHO,
-    TREVO,
-    VALE,
-    VEREDA,
-    VIA,
-    VIADUTO,
-    VIELA,
-    VILA;
-```
-
-sexo:
-
-```
-    MASCUNILO
-    FEMININO
-```
-
-unidadeFederativa:
-
-```
-    AC,
-    AL,
-    AP,
-    AM,
-    BA,
-    CE,
-    DF,
-    ES,
-    GO,
-    MA,
-    MT,
-    MS,
-    MG,
-    PA,
-    PB,
-    PR,
-    PE,
-    PI,
-    RJ,
-    RN,
-    RS,
-    RO,
-    RR,
-    SC,
-    SP,
-    SE,
-    TO
-```
-
 ## ✅ Status
 
 > ✅ Projeto concluído com sucesso  
