@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: processo-seletivo-api
+  datasource:
+    url: ${POSTGRES_URL}/processo-seletivo-db
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env
+
+springdoc:
+  show-actuator: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    filter: true
+    path: /swagger-ui.html
+
+minio:
+  url: ${MINIO_URL}
+  username: ${MINIO_USERNAME}
+  password: ${MINIO_PASSWORD}
+  bucket: ${MINIO_BUCKET}
+
+server:
+  port: ${SERVER_PORT:26000}
+
+
