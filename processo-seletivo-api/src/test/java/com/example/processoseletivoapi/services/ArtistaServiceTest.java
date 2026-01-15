@@ -1,6 +1,6 @@
 package com.example.processoseletivoapi.services;
 
-import com.example.processoseletivoapi.exceptions.BussinesException;
+import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.models.Artista;
 import com.example.processoseletivoapi.repositories.ArtistaRepository;
@@ -32,8 +32,8 @@ class ArtistaServiceTest {
 
     @Test
     void criarArtistaComErroCampoObrigatorio() {
-        Assertions.assertThrows(BussinesException.class, () -> new Artista(null, ""));
-        Assertions.assertThrows(BussinesException.class, () -> new Artista(null, null));
+        Assertions.assertThrows(BusinessException.class, () -> new Artista(null, ""));
+        Assertions.assertThrows(BusinessException.class, () -> new Artista(null, null));
     }
 
     @Test

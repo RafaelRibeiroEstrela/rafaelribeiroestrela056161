@@ -1,6 +1,6 @@
 package com.example.processoseletivoapi.models;
 
-import com.example.processoseletivoapi.exceptions.BussinesException;
+import com.example.processoseletivoapi.exceptions.BusinessException;
 import jakarta.persistence.*;
 
 @Entity
@@ -34,7 +34,7 @@ public class Artista {
 
     public void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new BussinesException("O nome é obrigatório");
+            throw new BusinessException("O nome é obrigatório");
         }
         this.nome = nome;
     }
