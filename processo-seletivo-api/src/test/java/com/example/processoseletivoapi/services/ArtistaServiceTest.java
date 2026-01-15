@@ -37,6 +37,14 @@ class ArtistaServiceTest {
     }
 
     @Test
+    void atualizarArtistaComSucesso() {
+        long id = 1L;
+        Artista artista = new Artista(1L, "Artista teste atualizado");
+        Mockito.when(repository.save(artista)).thenReturn(artista);
+        Assertions.assertEquals(artista, service.update(artista, id));
+    }
+
+    @Test
     void buscarArtistaComSucesso() {
         long id = 1L;
         Artista artista = new Artista(1L, "Artista teste");

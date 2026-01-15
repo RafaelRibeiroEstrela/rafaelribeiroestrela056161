@@ -1,7 +1,9 @@
 package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
+import com.example.processoseletivoapi.models.AlbumArtista;
 import com.example.processoseletivoapi.models.Artista;
+import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
 import com.example.processoseletivoapi.repositories.ArtistaRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,11 @@ import java.util.List;
 public class ArtistaService {
 
     private final ArtistaRepository repository;
+    private final AlbumArtistaRepository albumArtistaRepository;
 
-    public ArtistaService(ArtistaRepository repository) {
+    public ArtistaService(ArtistaRepository repository, AlbumArtistaRepository albumArtistaRepository) {
         this.repository = repository;
+        this.albumArtistaRepository = albumArtistaRepository;
     }
 
     public Artista create(Artista model) {
@@ -26,11 +30,17 @@ public class ArtistaService {
     }
 
     public void delete(long id) {
+        albumArtistaRepository.deleteByArtistaId(id);
         repository.deleteById(id);
     }
 
     public List<Artista> findAll() {
         return repository.findAll();
+    }
+
+    public List<Artista> findByAlbumId(long albumId) {
+        List<AlbumArtista> albumArtistaList = albumArtistaRepository.findByAlbumId(albumId);
+        return repository.findAllById(albumArtistaList.stream().map(obj -> obj.getId().getArtistaId()).toList());
     }
 
     public Artista findById(long id) {
