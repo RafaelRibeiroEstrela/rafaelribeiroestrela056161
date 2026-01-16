@@ -1,0 +1,51 @@
+package com.example.processoseletivoapi.services;
+
+import com.example.processoseletivoapi.clients.RegionalClient;
+import com.example.processoseletivoapi.mappers.RegionalMapper;
+import com.example.processoseletivoapi.models.Regional;
+import com.example.processoseletivoapi.repositories.RegionalRepository;
+import com.example.processoseletivoapi.responses.RegionalResponse;
+import feign.FeignException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@ExtendWith(MockitoExtension.class)
+class RegionalServiceTest {
+
+    @InjectMocks
+    private RegionalService service;
+
+    @Mock
+    private RegionalRepository repository;
+
+    @Mock
+    private RegionalClient client;
+
+    @Mock
+    private RegionalMapper mapper;
+
+    @Test
+    void testSincronizarComSucesso() {
+        List<RegionalResponse> reginais = List.of(new RegionalResponse(1L, "Regional teste ", null));
+        Mockito.when(client.findAll()).thenReturn(reginais);
+        Mockito.when(repository.findAll()).thenReturn(List.of());
+        Assertions.assertAll(() -> service.sync());
+    }
+
+    @Test
+    void testSincronizarComFalhaApiIndisponivel() {
+        FeignException feignException = Mockito.mock(FeignException.class);
+        Mockito.when(client.findAll()).thenThrow(feignException);
+        Assertions.assertThrows(FeignException.class, () -> service.sync());
+    }
+
+}
