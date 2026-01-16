@@ -27,13 +27,13 @@ public class AlbumService {
 
     public Album create(Album model, Set<Long> artistaIdList) {
         model = repository.save(model);
-        Set<AlbumArtista> albumArtistas = new HashSet<>();
         if (artistaIdList != null && !artistaIdList.isEmpty()) {
+            Set<AlbumArtista> albumArtistas = new HashSet<>();
             for (Long artistaId : artistaIdList) {
                 albumArtistas.add(new AlbumArtista(artistaId, model.getId()));
             }
+            albumArtistaRepository.saveAll(albumArtistas);
         }
-        albumArtistaRepository.saveAll(albumArtistas);
         return model;
     }
 

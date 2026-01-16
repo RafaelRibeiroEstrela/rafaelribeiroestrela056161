@@ -1,5 +1,6 @@
 package com.example.processoseletivoapi.models;
 
+import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.models.ids.AlbumArtistaId;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -16,7 +17,7 @@ public class AlbumArtista {
     }
 
     public AlbumArtista(Long artistaId, Long albumId) {
-        this.id = new AlbumArtistaId(artistaId, albumId);
+        this.setId(artistaId, albumId);
     }
 
     public AlbumArtistaId getId() {
@@ -25,5 +26,12 @@ public class AlbumArtista {
 
     public void setId(AlbumArtistaId id) {
         this.id = id;
+    }
+
+    public void setId(Long artistaId, Long albumId) {
+        if (artistaId == null || albumId == null) {
+            throw new BusinessException("O identificador do artista e do album é obrigatório");
+        }
+        this.id = new AlbumArtistaId(artistaId, albumId);
     }
 }
