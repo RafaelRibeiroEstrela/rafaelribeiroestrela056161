@@ -34,6 +34,10 @@ public class RegionalService {
         }
     }
 
+    public List<Regional> findAll() {
+        return repository.findAll();
+    }
+
     private void salvarAtualizar(List<Regional> regionaisApi, List<Regional> regionaisDb) {
         List<Regional> list = new ArrayList<>();
         for (Regional regional : regionaisApi) {
