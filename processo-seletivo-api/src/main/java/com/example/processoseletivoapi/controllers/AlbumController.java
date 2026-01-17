@@ -10,6 +10,7 @@ import com.example.processoseletivoapi.services.AlbumService;
 import com.example.processoseletivoapi.services.ArtistaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,8 +58,8 @@ public class AlbumController {
 
     @Transactional(readOnly = true)
     @GetMapping
-    public ResponseEntity<Page<AlbumResponse>> find(@RequestParam(required = false) Boolean possuiCantor, Pageable pageable) {
-        Page<Album> albuns = service.find(possuiCantor, pageable);
+    public ResponseEntity<Page<AlbumResponse>> find(@RequestParam(required = false) Boolean possuiCantor, @RequestParam(required = false) String nomeArtista, Pageable pageable) {
+        Page<Album> albuns = service.find(possuiCantor, nomeArtista, pageable);
         return ResponseEntity.ok().body(albuns.map(mapper::modelToResponse));
     }
 
