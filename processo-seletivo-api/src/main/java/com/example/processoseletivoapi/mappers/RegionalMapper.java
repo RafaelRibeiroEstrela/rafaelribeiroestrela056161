@@ -9,7 +9,7 @@ public class RegionalMapper {
 
     public Regional responseToModel(RegionalResponse response) {
         if (response == null) return null;
-        return new Regional(null, response.id(), response.nome(), true);
+        return new Regional(null, response.id(), response.nome(), response.ativo());
     }
 
     public RegionalResponse modelToResponse(Regional model) {

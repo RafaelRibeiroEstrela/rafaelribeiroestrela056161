@@ -14,11 +14,11 @@ public class Regional {
     @Column(name = "id_externo")
     private Long regionalId;
     private String nome;
-    private boolean ativo;
+    private Boolean ativo;
 
     public Regional() {}
 
-    public Regional(Long id, Long regionalId, String nome, boolean ativo) {
+    public Regional(Long id, Long regionalId, String nome, Boolean ativo) {
         this.setId(id);
         this.setRegionalId(regionalId);
         this.setNome(nome);
@@ -49,11 +49,11 @@ public class Regional {
         this.nome = nome;
     }
 
-    public boolean isAtivo() {
+    public Boolean isAtivo() {
         return ativo;
     }
 
-    public void setAtivo(boolean ativo) {
+    public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
 

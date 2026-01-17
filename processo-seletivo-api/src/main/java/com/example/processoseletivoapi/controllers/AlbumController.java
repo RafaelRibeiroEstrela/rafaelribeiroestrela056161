@@ -58,8 +58,8 @@ public class AlbumController {
 
     @Transactional(readOnly = true)
     @GetMapping
-    public ResponseEntity<Page<AlbumResponse>> find(@RequestParam(required = false) Boolean possuiCantor, @RequestParam(required = false) String nomeArtista, Pageable pageable) {
-        Page<Album> albuns = service.find(possuiCantor, nomeArtista, pageable);
+    public ResponseEntity<Page<AlbumResponse>> find(@RequestParam(required = false) Boolean possuiCantor, @RequestParam(required = false) String nomeArtista, Sort.Direction ordenacao, Pageable pageable) {
+        Page<Album> albuns = service.find(possuiCantor, nomeArtista, ordenacao, pageable);
         return ResponseEntity.ok().body(albuns.map(mapper::modelToResponse));
     }
 

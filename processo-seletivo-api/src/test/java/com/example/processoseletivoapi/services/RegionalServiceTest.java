@@ -2,6 +2,7 @@ package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.clients.RegionalClient;
 import com.example.processoseletivoapi.mappers.RegionalMapper;
+import com.example.processoseletivoapi.models.Regional;
 import com.example.processoseletivoapi.repositories.RegionalRepository;
 import com.example.processoseletivoapi.responses.RegionalResponse;
 import feign.FeignException;
@@ -32,9 +33,12 @@ class RegionalServiceTest {
 
     @Test
     void testSincronizarComSucesso() {
-        List<RegionalResponse> reginais = List.of(new RegionalResponse(1L, "Regional teste ", null));
+        RegionalResponse response = new RegionalResponse(1L, "Regional teste ", null);
+        Regional model = new Regional(null, 1L, "RegionalTeste", null);
+        List<RegionalResponse> reginais = List.of(response);
         Mockito.when(client.findAll()).thenReturn(reginais);
         Mockito.when(repository.findAll()).thenReturn(List.of());
+        Mockito.when(mapper.responseToModel(response)).thenReturn(model);
         Assertions.assertAll(() -> service.sync());
     }
 
