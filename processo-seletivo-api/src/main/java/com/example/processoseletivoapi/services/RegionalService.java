@@ -27,6 +27,7 @@ public class RegionalService {
         List<Regional> regionaisApi = client.findAll().stream().map(mapper::responseToModel).toList();
         List<Regional> regionaisDb = repository.findAll();
         if (regionaisDb.isEmpty()) {
+            regionaisApi.forEach(obj -> obj.setAtivo(true));
             repository.saveAll(regionaisApi);
         } else {
             salvarAtualizar(regionaisApi, regionaisDb);
@@ -47,7 +48,7 @@ public class RegionalService {
                 list.add(regional);
             } else {
                 Regional model = optional.get();
-                if (!regional.getNome().trim().equals(model.getNome().trim())) {
+                if (!regional.getNome().equals(model.getNome())) {
                     model.setAtivo(false);
                     regional.setAtivo(true);
                     list.add(model);

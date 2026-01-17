@@ -2,7 +2,6 @@ package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.clients.RegionalClient;
 import com.example.processoseletivoapi.mappers.RegionalMapper;
-import com.example.processoseletivoapi.models.Regional;
 import com.example.processoseletivoapi.repositories.RegionalRepository;
 import com.example.processoseletivoapi.responses.RegionalResponse;
 import feign.FeignException;
@@ -13,9 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
