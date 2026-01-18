@@ -37,12 +37,16 @@ public class AlbumImagemService {
         return model;
     }
 
-    public List<AlbumImagem> downloadByAlbumId(Long albumId) {
+    public List<AlbumImagem> downloadByAlbumId(long albumId) {
         List<AlbumImagem> models = repository.findByAlbumId(albumId);
         models.forEach(obj -> {
             byte[] content = storageClient.download(obj.getStorageKey());
             obj.setContent(content);
         });
         return models;
+    }
+
+    public List<AlbumImagem> recoverMetadataByAlbumId(long albumId) {
+        return repository.findByAlbumId(albumId);
     }
 }

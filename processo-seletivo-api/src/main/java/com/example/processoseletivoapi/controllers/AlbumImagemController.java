@@ -52,8 +52,15 @@ public class AlbumImagemController {
             @PathVariable Long albumId) {
         List<AlbumImagem> models = service.downloadByAlbumId(albumId);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"arquivos.zip\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"capas-album.zip\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(new InputStreamResource(new ByteArrayInputStream(util.compactFilesToZip(models))));
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/recover-metadata/{albumId}")
+    public ResponseEntity<List<AlbumImagemResponse>> recoverMetadataByAlbumId(@PathVariable Long albumId) {
+        List<AlbumImagem> models = service.recoverMetadataByAlbumId(albumId);
+        return ResponseEntity.ok().body(models.stream().map(mapper::modelToResponse).toList());
     }
 }

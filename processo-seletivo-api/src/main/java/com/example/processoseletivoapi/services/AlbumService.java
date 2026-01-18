@@ -4,6 +4,7 @@ import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.models.Album;
 import com.example.processoseletivoapi.models.AlbumArtista;
 import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
+import com.example.processoseletivoapi.repositories.AlbumImagemRepository;
 import com.example.processoseletivoapi.repositories.AlbumRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +21,12 @@ public class AlbumService {
 
     private final AlbumRepository repository;
     private final AlbumArtistaRepository albumArtistaRepository;
+    private final AlbumImagemRepository albumImagemRepository;
 
-    public AlbumService(AlbumRepository repository, AlbumArtistaRepository albumArtistaRepository) {
+    public AlbumService(AlbumRepository repository, AlbumArtistaRepository albumArtistaRepository, AlbumImagemRepository albumImagemRepository) {
         this.repository = repository;
         this.albumArtistaRepository = albumArtistaRepository;
+        this.albumImagemRepository = albumImagemRepository;
     }
 
     public Album create(Album model, Set<Long> artistaIdList) {
@@ -59,6 +62,7 @@ public class AlbumService {
 
     public void delete(long id) {
         albumArtistaRepository.deleteByAlbumId(id);
+        albumImagemRepository.deleteByAlbumId(id);
         repository.deleteById(id);
     }
 
