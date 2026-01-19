@@ -56,7 +56,7 @@ public class AlbumImagemController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/download/storage-key/{key}")
+    @GetMapping("/download/storage-key")
     public ResponseEntity<Resource> downloadByStorageKey(
             @Parameter(description = "Chave do arquivo", required = true)
             @RequestParam String key) {
@@ -83,8 +83,8 @@ public class AlbumImagemController {
 
 
     @Transactional
-    @DeleteMapping("/delete/storage-key/{key}")
-    public ResponseEntity<List<AlbumImagemResponse>> deleteByStorageKey(@PathVariable String key) {
+    @DeleteMapping("/delete/storage-key")
+    public ResponseEntity<List<AlbumImagemResponse>> deleteByStorageKey(@RequestParam String key) {
         service.deleteByStorageKey(key);
         return ResponseEntity.noContent().build();
     }
