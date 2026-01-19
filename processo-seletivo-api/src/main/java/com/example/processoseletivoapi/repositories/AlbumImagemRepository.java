@@ -15,4 +15,7 @@ public interface AlbumImagemRepository extends JpaRepository<AlbumImagem, Long> 
 
     @Modifying
     void deleteByAlbumId(Long albumId);
+
+    @Modifying
+    void deleteByStorageKey(String key);
 }

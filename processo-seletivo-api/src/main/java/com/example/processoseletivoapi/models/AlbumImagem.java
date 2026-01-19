@@ -23,9 +23,10 @@ public class AlbumImagem {
     }
 
     public AlbumImagem(Long albumId, String fileName, String fileContentType, byte[] content) {
-        this.albumId = albumId;
-        this.fileName = fileName;
-        this.fileContentType = fileContentType;
+        this.setAlbumId(albumId);
+        this.setFileName(fileName);
+        this.setFileContentType(fileContentType);
+        this.setContent(content);
     }
 
     public Long getId() {
@@ -41,6 +42,9 @@ public class AlbumImagem {
     }
 
     public void setAlbumId(Long albumId) {
+        if (albumId == null) {
+            throw new BusinessException("O identificador do album é obrigatório");
+        }
         this.albumId = albumId;
     }
 
@@ -71,6 +75,9 @@ public class AlbumImagem {
     }
 
     public void setFileHash(String fileHash) {
+        if (fileHash == null || fileHash.trim().isEmpty()) {
+            throw new BusinessException("O hash do arquivo é obrigatório");
+        }
         this.fileHash = fileHash;
     }
 
@@ -79,6 +86,9 @@ public class AlbumImagem {
     }
 
     public void setStorageKey(String storageKey) {
+        if (storageKey == null || storageKey.trim().isEmpty()) {
+            throw new BusinessException("A chave do arquivo é obrigatório");
+        }
         this.storageKey = storageKey;
     }
 

@@ -33,11 +33,9 @@ public class AlbumImagemController {
     }
 
     @Transactional
-    @PutMapping("/upload/{albumId}")
+    @PutMapping(value = "/upload/{albumId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<AlbumImagemResponse>> uploadImagens(
-            @Parameter(description = "Lista de imagens para capas de um album", required = true)
             @RequestParam("files") List<MultipartFile> files,
-            @Parameter(description = "ID do album", required = true)
             @PathVariable Long albumId) {
         List<AlbumImagem> models = files.stream()
                 .map(obj -> service.upload(mapper.multipartFileToModel(obj, albumId)))
@@ -58,9 +56,36 @@ public class AlbumImagemController {
     }
 
     @Transactional(readOnly = true)
+    @GetMapping("/download/storage-key/{key}")
+    public ResponseEntity<Resource> downloadByStorageKey(
+            @Parameter(description = "Chave do arquivo", required = true)
+            @RequestParam String key) {
+        AlbumImagem model = service.downloadByStorageKey(key);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + model.getFileName())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(new ByteArrayInputStream(model.getContent())));
+    }
+
+    @Transactional(readOnly = true)
     @GetMapping("/recover-metadata/{albumId}")
     public ResponseEntity<List<AlbumImagemResponse>> recoverMetadataByAlbumId(@PathVariable Long albumId) {
         List<AlbumImagem> models = service.recoverMetadataByAlbumId(albumId);
         return ResponseEntity.ok().body(models.stream().map(mapper::modelToResponse).toList());
+    }
+
+    @Transactional
+    @DeleteMapping("/delete/{albumId}")
+    public ResponseEntity<List<AlbumImagemResponse>> deleteByAlbumId(@PathVariable Long albumId) {
+        service.deleteByAlbumId(albumId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @Transactional
+    @DeleteMapping("/delete/storage-key/{key}")
+    public ResponseEntity<List<AlbumImagemResponse>> deleteByStorageKey(@PathVariable String key) {
+        service.deleteByStorageKey(key);
+        return ResponseEntity.noContent().build();
     }
 }
