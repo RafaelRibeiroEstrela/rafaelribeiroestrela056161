@@ -53,4 +53,8 @@ server:
 
 environment: ${ENVIRONMENT:dev}
 
+security:
+  secret-key: ${SECRET_KEY:12345}
+  issuer: ${ISSUER:processo-seletivo-api}
+
 
