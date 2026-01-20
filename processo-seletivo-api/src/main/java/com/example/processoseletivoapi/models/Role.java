@@ -2,11 +2,10 @@ package com.example.processoseletivoapi.models;
 
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "tb_roles")
-public class Role implements GrantedAuthority {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +32,6 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    @Override
     public String getAuthority() {
         return authority;
     }
