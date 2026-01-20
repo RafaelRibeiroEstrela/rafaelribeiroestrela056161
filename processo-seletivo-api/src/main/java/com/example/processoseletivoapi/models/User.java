@@ -3,6 +3,10 @@ package com.example.processoseletivoapi.models;
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import jakarta.persistence.*;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Entity
 @Table(name = "tb_users")
 public class User {
@@ -70,5 +74,10 @@ public class User {
             throw new BusinessException("Role(s) is required");
         }
         this.roles = roles;
+    }
+
+    @Transient
+    public Set<Long> getRolesInHashSet() {
+        return Arrays.stream(roles).collect(Collectors.toSet());
     }
 }

@@ -44,7 +44,13 @@ minio:
   password: ${MINIO_PASSWORD}
   bucket: ${MINIO_BUCKET}
 
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+
 server:
   port: ${SERVER_PORT:26000}
+
+environment: ${ENVIRONMENT:dev}
 
 
