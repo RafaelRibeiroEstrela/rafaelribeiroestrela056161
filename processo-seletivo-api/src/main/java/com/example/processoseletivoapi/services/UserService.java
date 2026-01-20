@@ -7,6 +7,8 @@ import com.example.processoseletivoapi.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class UserService {
 
@@ -24,6 +26,12 @@ public class UserService {
         }
         model.setPassword(passwordEncoder.encode(model.getPassword()));
         return repository.save(model);
+    }
+
+    public void updateRoles(Set<Long> rolesId, String username) {
+        User model = repository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Nenhum usuário encontrado"));
+        model.setRoles(rolesId.toArray(new Long[0]));
+        repository.save(model);
     }
 
     public void updatePassword(String oldPassword, String newPassword, String username) {

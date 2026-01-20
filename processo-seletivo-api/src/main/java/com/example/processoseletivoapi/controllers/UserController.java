@@ -35,6 +35,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model));
     }
 
+    @PutMapping("/update-roles")
+    public ResponseEntity<Void> updateRoles(@RequestBody Set<Long> rolesId, @RequestParam String username) {
+        service.updateRoles(rolesId, username);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/update-password")
     public ResponseEntity<Void> updatePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestParam String username) {
         service.updatePassword(oldPassword, newPassword, username);
