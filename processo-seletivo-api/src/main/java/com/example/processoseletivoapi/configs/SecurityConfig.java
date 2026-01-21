@@ -46,6 +46,7 @@ public class SecurityConfig {
             return httpSecurity
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                    .sessionManagement(obj -> obj.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .build();
         }
         return httpSecurity

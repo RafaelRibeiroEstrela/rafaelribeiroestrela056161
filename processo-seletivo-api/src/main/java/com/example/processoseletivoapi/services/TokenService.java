@@ -27,7 +27,6 @@ public class TokenService {
     @Value("${security.issuer}")
     private String issuer;
     private static final int EXPIRATION_TIME = 300;
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
     private final TokenRepository tokenRepository;
     private final UserService userService;
@@ -72,7 +71,6 @@ public class TokenService {
             verifier.verify(token);
             return true;
         } catch (JWTVerificationException e) {
-            LOGGER.error("JWT verification failed: {}", e.getMessage());
             return false;
         }
     }

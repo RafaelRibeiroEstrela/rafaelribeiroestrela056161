@@ -1,8 +1,10 @@
 package com.example.processoseletivoapi.configs;
 
 import com.example.processoseletivoapi.exceptions.AuthorizationException;
+import com.example.processoseletivoapi.models.RateLimit;
 import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.User;
+import com.example.processoseletivoapi.services.RateLimitService;
 import com.example.processoseletivoapi.services.RoleService;
 import com.example.processoseletivoapi.services.TokenService;
 import com.example.processoseletivoapi.services.UserService;
@@ -10,6 +12,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,19 +29,22 @@ import java.util.Set;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityFilter.class);
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenService tokenService;
     private final UserService userService;
     private final RoleService roleService;
+    private final RateLimitService rateLimitService;
 
     @Value("${environment}")
     private String environment;
 
-    public SecurityFilter(TokenService tokenService, UserService userService, RoleService roleService) {
+    public SecurityFilter(TokenService tokenService, UserService userService, RoleService roleService, RateLimitService rateLimitService) {
         this.tokenService = tokenService;
         this.userService = userService;
         this.roleService = roleService;
+        this.rateLimitService = rateLimitService;
     }
 
     @Override
@@ -66,6 +73,13 @@ public class SecurityFilter extends OncePerRequestFilter {
                 String username = tokenService.extractUsername(token);
 
                 User user = userService.findByUsername(username);
+
+                rateLimitService.registrarAcesso(username);
+
+                if (!rateLimitService.verificarSeAcessoPermitido(username)) {
+                    LOGGER.error("Limite de acessos atingido");
+                    throw new AuthorizationException("Limite de acessos atingido");
+                }
 
                 Collection<? extends GrantedAuthority> roles = buildGrantedAuthority(roleService.findAllByIds(user.getRolesInHashSet()));
 

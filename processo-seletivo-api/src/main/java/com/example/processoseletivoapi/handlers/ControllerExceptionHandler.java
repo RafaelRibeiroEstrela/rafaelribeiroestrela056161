@@ -1,5 +1,6 @@
 package com.example.processoseletivoapi.handlers;
 
+import com.example.processoseletivoapi.exceptions.AuthorizationException;
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.exceptions.StorageException;
@@ -73,7 +74,20 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse standardError = new ErrorResponse(
                 status.value(),
-                "ResourceNotFoundException",
+                "StorageException",
+                e.getMessage(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> authorizationException(AuthorizationException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ErrorResponse standardError = new ErrorResponse(
+                status.value(),
+                "AuthorizationException",
                 e.getMessage(),
                 LocalDateTime.now(),
                 request.getRequestURI()
