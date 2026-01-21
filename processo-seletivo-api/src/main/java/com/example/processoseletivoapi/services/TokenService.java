@@ -61,7 +61,7 @@ public class TokenService {
     }
 
     public boolean isValidToken(String token) {
-        if (tokenRepository.findByToken(token).isPresent()) {
+        if (tokenRepository.findById(token).isPresent()) {
             return false;
         }
         try {
@@ -78,8 +78,7 @@ public class TokenService {
     }
 
     public void delete(String token) {
-        String id = UUID.randomUUID().toString();
-        tokenRepository.save(new Token(id, token, LocalDateTime.now()));
+        tokenRepository.save(new Token(token, LocalDateTime.now()));
     }
 
     public List<String> extractRoles(String bearerToken) {
