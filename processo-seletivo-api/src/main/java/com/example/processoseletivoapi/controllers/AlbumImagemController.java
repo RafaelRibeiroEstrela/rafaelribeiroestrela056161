@@ -48,9 +48,7 @@ public class AlbumImagemController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Imagens enviadas com sucesso",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = AlbumImagemResponse.class)))
+                    description = "Imagens enviadas com sucesso"
             ),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content),
@@ -61,9 +59,7 @@ public class AlbumImagemController {
     public ResponseEntity<List<AlbumImagemResponse>> uploadImagens(
             @Parameter(
                     description = "Lista de arquivos (imagens) para upload",
-                    required = true,
-                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            array = @ArraySchema(schema = @Schema(type = "string", format = "binary")))
+                    required = true
             )
             @RequestParam("files") List<MultipartFile> files,
 
@@ -84,9 +80,7 @@ public class AlbumImagemController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "ZIP gerado com sucesso",
-                    content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                            schema = @Schema(type = "string", format = "binary"))
+                    description = "ZIP gerado com sucesso"
             ),
             @ApiResponse(responseCode = "404", description = "Álbum/imagens não encontrados", content = @Content)
     })
@@ -111,9 +105,7 @@ public class AlbumImagemController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Arquivo obtido com sucesso",
-                    content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                            schema = @Schema(type = "string", format = "binary"))
+                    description = "Arquivo obtido com sucesso"
             ),
             @ApiResponse(responseCode = "404", description = "Arquivo não encontrado", content = @Content)
     })
@@ -138,9 +130,7 @@ public class AlbumImagemController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Metadados recuperados com sucesso",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = AlbumImagemResponse.class)))
+                    description = "Metadados recuperados com sucesso"
             ),
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })

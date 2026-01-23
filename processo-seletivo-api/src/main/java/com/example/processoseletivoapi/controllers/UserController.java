@@ -42,9 +42,7 @@ public class UserController {
             description = "Cria um novo usuário e retorna o usuário criado."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponse.class))),
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "409", description = "Usuário já existe", content = @Content)
     })
@@ -52,8 +50,7 @@ public class UserController {
     public ResponseEntity<UserResponse> create(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Dados para criação do usuário",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = UserRequest.class))
+                    required = true
             )
             @RequestBody UserRequest request
     ) {
@@ -74,8 +71,7 @@ public class UserController {
     public ResponseEntity<Void> updateRoles(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "IDs das roles a serem atribuídas ao usuário",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = Long.class))
+                    required = true
             )
             @RequestBody Set<Long> rolesId,
             @Parameter(description = "Username do usuário", required = true, example = "joao.silva")
@@ -130,9 +126,7 @@ public class UserController {
             description = "Retorna os dados do usuário e suas roles a partir do username."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
     @GetMapping

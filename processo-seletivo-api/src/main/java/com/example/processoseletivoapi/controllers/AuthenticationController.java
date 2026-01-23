@@ -34,12 +34,7 @@ public class AuthenticationController {
     )
     @ApiResponse(
             responseCode = "201",
-            description = "Login realizado com sucesso (token retornado)",
-            content = @Content(
-                    mediaType = "text/plain",
-                    schema = @Schema(type = "string", description = "Token JWT/Access Token"),
-                    examples = @ExampleObject(value = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
-            )
+            description = "Login realizado com sucesso (token retornado)"
     )
     @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas", content = @Content)

@@ -39,8 +39,7 @@ public class RoleController {
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Role criada com sucesso",
-                    content = @Content(schema = @Schema(implementation = RoleResponse.class))),
+            @ApiResponse(responseCode = "201", description = "Role criada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content),
@@ -66,8 +65,7 @@ public class RoleController {
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Role atualizada com sucesso",
-                    content = @Content(schema = @Schema(implementation = RoleResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Role atualizada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content),
@@ -79,8 +77,7 @@ public class RoleController {
     public ResponseEntity<RoleResponse> update(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Dados para atualização da role",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = RoleRequest.class))
+                    required = true
             )
             @RequestBody RoleRequest request,
             @Parameter(description = "ID da role", example = "1", required = true)
@@ -117,8 +114,7 @@ public class RoleController {
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso",
-                    content = @Content(schema = @Schema(implementation = RoleResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content)
     })

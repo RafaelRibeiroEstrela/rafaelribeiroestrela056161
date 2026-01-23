@@ -55,9 +55,7 @@ public class AlbumController {
             description = "Cria um álbum e associa os artistas informados. Publica o evento no WebSocket."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Álbum criado",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = AlbumResponse.class))),
+            @ApiResponse(responseCode = "201", description = "Álbum criado"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "404", description = "Artista(s) não encontrado(s)", content = @Content)
     })
@@ -81,9 +79,7 @@ public class AlbumController {
             description = "Atualiza os dados do álbum e pode atualizar os artistas associados."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Álbum atualizado",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = AlbumResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Álbum atualizado"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "404", description = "Álbum (ou artista) não encontrado", content = @Content)
     })
@@ -133,9 +129,7 @@ public class AlbumController {
                     """
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Página de álbuns",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PageAlbumResponse.class)))
+            @ApiResponse(responseCode = "200", description = "Página de álbuns")
     })
     public ResponseEntity<Page<AlbumResponse>> find(
             @Parameter(description = "Se TRUE, retorna apenas álbuns que possuem artistas; se FALSE, apenas os que não possuem; se null, ignora o filtro",
@@ -167,9 +161,7 @@ public class AlbumController {
             description = "Retorna o álbum e os artistas associados."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Álbum encontrado",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = AlbumResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Álbum encontrado"),
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<AlbumResponse> findById(

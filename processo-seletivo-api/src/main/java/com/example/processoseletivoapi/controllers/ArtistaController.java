@@ -38,8 +38,7 @@ public class ArtistaController {
             description = "Cria um novo artista."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Artista criado com sucesso",
-                    content = @Content(schema = @Schema(implementation = ArtistaResponse.class))),
+            @ApiResponse(responseCode = "201", description = "Artista criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content)
@@ -63,8 +62,7 @@ public class ArtistaController {
             description = "Atualiza um artista existente pelo ID."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Artista atualizado com sucesso",
-                    content = @Content(schema = @Schema(implementation = ArtistaResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Artista atualizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content),
@@ -111,8 +109,7 @@ public class ArtistaController {
             description = "Retorna a lista de todos os artistas."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ArtistaResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content)
     })
@@ -128,8 +125,7 @@ public class ArtistaController {
             description = "Retorna um artista pelo ID."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Artista encontrado",
-                    content = @Content(schema = @Schema(implementation = ArtistaResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Artista encontrado"),
             @ApiResponse(responseCode = "401", description = "Não autenticado", content = @Content),
             @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content),
             @ApiResponse(responseCode = "404", description = "Artista não encontrado", content = @Content)

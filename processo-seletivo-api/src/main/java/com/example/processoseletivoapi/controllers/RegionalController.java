@@ -38,17 +38,11 @@ public class RegionalController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Sincronização executada com sucesso",
-                    content = @Content(
-                            mediaType = "text/plain",
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "Base de dados sincronizada")
-                    )
+                    description = "Sincronização executada com sucesso"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Erro interno ao executar sincronização",
-                    content = @Content
+                    description = "Erro interno ao executar sincronização"
             )
     })
     @GetMapping("/synchronize")
@@ -64,11 +58,7 @@ public class RegionalController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Lista de regionais retornada com sucesso",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = RegionalResponse.class)
-                    )
+                    description = "Lista de regionais retornada com sucesso"
             ),
             @ApiResponse(
                     responseCode = "500",
