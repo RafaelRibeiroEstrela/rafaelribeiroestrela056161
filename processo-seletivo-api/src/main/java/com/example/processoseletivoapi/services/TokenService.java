@@ -79,6 +79,15 @@ public class TokenService {
         tokenRepository.save(new Token(token, LocalDateTime.now()));
     }
 
+    public String refreshToken(String token) {
+        if (!isValidToken(token)) {
+            throw new TokenException("Token inválido");
+        }
+        delete(token);
+        String username = extractUsername(token);
+        return generate(username);
+    }
+
     public List<String> extractRoles(String bearerToken) {
         String token = cleanBearer(bearerToken);
         DecodedJWT jwt = JWT.decode(token);

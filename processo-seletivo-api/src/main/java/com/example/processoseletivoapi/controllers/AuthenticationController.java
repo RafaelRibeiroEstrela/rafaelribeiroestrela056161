@@ -2,6 +2,7 @@ package com.example.processoseletivoapi.controllers;
 
 import com.example.processoseletivoapi.requests.LoginRequest;
 import com.example.processoseletivoapi.services.AuthenticationService;
+import com.example.processoseletivoapi.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    private final TokenService tokenService;
 
-    public AuthenticationController(AuthenticationService service) {
+    public AuthenticationController(AuthenticationService service, TokenService tokenService) {
         this.service = service;
+        this.tokenService = tokenService;
     }
 
     @Operation(
@@ -76,5 +79,21 @@ public class AuthenticationController {
     ) {
         service.logout(token);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(
+            summary = "Realiza atualização de token"
+    )
+    @ApiResponse(responseCode = "200", description = "Token atualizado com sucesso", content = @Content)
+    @ApiResponse(responseCode = "401", description = "Token ausente ou inválido", content = @Content)
+    @PutMapping("/refresh-token")
+    public ResponseEntity<String> refreshToken(
+            @Parameter(
+                    description = "Token antigo"
+            )
+            @RequestHeader("token") String token
+    ) {
+        String newToken = tokenService.refreshToken(token);
+        return ResponseEntity.ok().body(newToken);
     }
 }
