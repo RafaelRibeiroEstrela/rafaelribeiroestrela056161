@@ -67,9 +67,8 @@ public class AlbumService {
         repository.deleteById(id);
     }
 
-    public Page<Album> find(Boolean possuiCantores, String nomeArtista, Sort.Direction ordenacao, Pageable pageable) {
+    public Page<Album> find(Boolean possuiCantores, String nomeArtista, Pageable pageable) {
         nomeArtista = nomeArtista == null || nomeArtista.trim().isEmpty() ? null : "%" + nomeArtista + "%";
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ordenacao, "nome");
         return repository.find(possuiCantores, nomeArtista, pageable);
     }
 

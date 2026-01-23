@@ -8,19 +8,27 @@ import com.example.processoseletivoapi.requests.AlbumRequest;
 import com.example.processoseletivoapi.responses.AlbumResponse;
 import com.example.processoseletivoapi.services.AlbumService;
 import com.example.processoseletivoapi.services.ArtistaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+@Tag(name = "ALBUM")
 @RestController
 @RequestMapping("/v1/albuns")
 public class AlbumController {
@@ -41,39 +49,154 @@ public class AlbumController {
 
 
     @Transactional
-    @PostMapping
-    public ResponseEntity<AlbumResponse> create(@RequestBody AlbumRequest request) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Criar álbum",
+            description = "Cria um álbum e associa os artistas informados. Publica o evento no WebSocket."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Álbum criado",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = AlbumResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Artista(s) não encontrado(s)", content = @Content)
+    })
+    public ResponseEntity<AlbumResponse> create(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "Dados do álbum",
+                    content = @Content(schema = @Schema(implementation = AlbumRequest.class))
+            )
+            @RequestBody AlbumRequest request
+    ) {
         Album model = service.create(mapper.requestToModel(request), request.artistaIdList());
         webSoket.publicar(model);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model));
     }
 
     @Transactional
-    @PutMapping("/{id}")
-    public ResponseEntity<AlbumResponse> update(@RequestBody AlbumRequest request, @PathVariable Long id) {
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Atualizar álbum",
+            description = "Atualiza os dados do álbum e pode atualizar os artistas associados."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Álbum atualizado",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = AlbumResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Álbum (ou artista) não encontrado", content = @Content)
+    })
+    public ResponseEntity<AlbumResponse> update(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "Dados do álbum",
+                    content = @Content(schema = @Schema(implementation = AlbumRequest.class))
+            )
+            @RequestBody AlbumRequest request,
+
+            @Parameter(description = "ID do álbum", example = "10", required = true)
+            @PathVariable Long id
+    ) {
         Album model = service.update(mapper.requestToModel(request), id, request.artistaIdList());
         return ResponseEntity.ok().body(mapper.modelToResponse(model));
     }
 
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @Operation(summary = "Excluir álbum", description = "Remove um álbum pelo ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Álbum removido"),
+            @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
+    })
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID do álbum", example = "10", required = true)
+            @PathVariable Long id
+    ) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @Transactional(readOnly = true)
-    @GetMapping
-    public ResponseEntity<Page<AlbumResponse>> find(@RequestParam(required = false) Boolean possuiCantor, @RequestParam(required = false) String nomeArtista, Sort.Direction ordenacao, Pageable pageable) {
-        Page<Album> albuns = service.find(possuiCantor, nomeArtista, ordenacao, pageable);
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Listar álbuns (com filtros, ordenação e paginação)",
+            description = """
+                    Retorna álbuns de forma paginada.
+                    Filtros opcionais:
+                    - possuiCantor: filtra se o álbum possui (ou não) cantores/artistas vinculados
+                    - nomeArtista: filtra por nome do artista (ex.: busca parcial)
+                    Ordenação:
+                    - ordenacao: ASC ou DESC (direção)
+                    Paginação:
+                    - page, size, sort (padrão do Spring Pageable)
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Página de álbuns",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PageAlbumResponse.class)))
+    })
+    public ResponseEntity<Page<AlbumResponse>> find(
+            @Parameter(description = "Se TRUE, retorna apenas álbuns que possuem artistas; se FALSE, apenas os que não possuem; se null, ignora o filtro",
+                    example = "true")
+            @RequestParam(required = false) Boolean possuiCantor,
+
+            @Parameter(description = "Filtra por nome do artista (parcial). Se null, ignora o filtro",
+                    example = "Chico")
+            @RequestParam(required = false) String nomeArtista,
+
+            @Parameter(description = "Pagina inicial da paginação")
+            @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Total de elementos que serão recuperados para a página")
+            @RequestParam(defaultValue = "10") int size,
+
+            @Parameter(description = "Ordenação alfabetica dos albuns com direção da ordenação (ASC/DESC)", example = "ASC")
+            @RequestParam(defaultValue = "ASC", required = false) Sort.Direction ordenacao
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(ordenacao, "nome"));
+        Page<Album> albuns = service.find(possuiCantor, nomeArtista, pageable);
         return ResponseEntity.ok().body(albuns.map(mapper::modelToResponse));
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/{id}")
-    public ResponseEntity<AlbumResponse> findById(@PathVariable Long id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Buscar álbum por ID",
+            description = "Retorna o álbum e os artistas associados."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Álbum encontrado",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = AlbumResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
+    })
+    public ResponseEntity<AlbumResponse> findById(
+            @Parameter(description = "ID do álbum", example = "10", required = true)
+            @PathVariable Long id
+    ) {
         Album model = service.findById(id);
         List<Artista> artistas = artistaService.findByAlbumId(id);
-        return ResponseEntity.ok().body(mapper.modelToResponse(model, artistas.stream().map(artistaMapper::modelToResponse).collect(Collectors.toSet())));
+
+        return ResponseEntity.ok().body(
+                mapper.modelToResponse(
+                        model,
+                        artistas.stream()
+                                .map(artistaMapper::modelToResponse)
+                                .collect(Collectors.toSet())
+                )
+        );
+    }
+
+    /**
+     * Wrapper somente para documentação do Swagger:
+     * Page<AlbumResponse> é genérico e o Swagger costuma renderizar "Page" sem o conteúdo tipado.
+     */
+    @Schema(name = "PageAlbumResponse", description = "Estrutura padrão de paginação contendo itens de AlbumResponse")
+    static class PageAlbumResponse extends org.springframework.data.domain.PageImpl<AlbumResponse> {
+        public PageAlbumResponse() {
+            super(List.of());
+        }
     }
 }
