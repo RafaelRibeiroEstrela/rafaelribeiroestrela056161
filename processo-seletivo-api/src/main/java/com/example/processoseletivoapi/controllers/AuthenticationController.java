@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "AUTHENTICATION")
+@Tag(name = "AUTENTICACAO")
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthenticationController {
