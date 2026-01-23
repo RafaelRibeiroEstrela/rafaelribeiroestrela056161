@@ -13,10 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,18 +29,22 @@ public class AlbumController {
     private final ArtistaService artistaService;
     private final AlbumMapper mapper;
     private final ArtistaMapper artistaMapper;
+    private final AlbumWebSoket webSoket;
 
-    public AlbumController(AlbumService service, ArtistaService artistaService, AlbumMapper mapper, ArtistaMapper artistaMapper) {
+    public AlbumController(AlbumService service, ArtistaService artistaService, AlbumMapper mapper, ArtistaMapper artistaMapper, AlbumWebSoket webSoket) {
         this.service = service;
         this.artistaService = artistaService;
         this.mapper = mapper;
         this.artistaMapper = artistaMapper;
+        this.webSoket = webSoket;
     }
+
 
     @Transactional
     @PostMapping
     public ResponseEntity<AlbumResponse> create(@RequestBody AlbumRequest request) {
         Album model = service.create(mapper.requestToModel(request), request.artistaIdList());
+        webSoket.publicar(model);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model));
     }
 

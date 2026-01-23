@@ -28,7 +28,8 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/webjars/**",
             "/error",
-            "/favicon.ico"
+            "/favicon.ico",
+            "/ws/**"
     };
 
     @Value("${environment}")
