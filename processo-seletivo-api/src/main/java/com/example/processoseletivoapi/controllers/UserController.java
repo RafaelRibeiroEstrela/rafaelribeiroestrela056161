@@ -74,7 +74,7 @@ public class UserController {
                     required = true
             )
             @RequestBody Set<Long> rolesId,
-            @Parameter(description = "Username do usuário", required = true, example = "joao.silva")
+            @Parameter(description = "Username do usuário", required = true)
             @RequestParam String username
     ) {
         service.updateRoles(rolesId, username);
@@ -93,11 +93,11 @@ public class UserController {
     })
     @PutMapping("/update-password")
     public ResponseEntity<Void> updatePassword(
-            @Parameter(description = "Senha atual", required = true, example = "SenhaAntiga@123")
+            @Parameter(description = "Senha atual", required = true)
             @RequestParam String oldPassword,
-            @Parameter(description = "Nova senha", required = true, example = "NovaSenha@123")
+            @Parameter(description = "Nova senha", required = true)
             @RequestParam String newPassword,
-            @Parameter(description = "Username do usuário", required = true, example = "joao.silva")
+            @Parameter(description = "Username do usuário", required = true)
             @RequestParam String username
     ) {
         service.updatePassword(oldPassword, newPassword, username);
@@ -114,7 +114,7 @@ public class UserController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID do usuário", required = true, example = "10")
+            @Parameter(description = "ID do usuário", required = true)
             @PathVariable Long id
     ) {
         service.delete(id);
@@ -131,7 +131,7 @@ public class UserController {
     })
     @GetMapping
     public ResponseEntity<UserResponse> findByUsername(
-            @Parameter(description = "Username do usuário", required = true, example = "admin")
+            @Parameter(description = "Username do usuário", required = true)
             @RequestParam String username
     ) {
         User model = service.findByUsername(username);

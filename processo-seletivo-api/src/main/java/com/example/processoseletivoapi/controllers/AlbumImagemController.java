@@ -63,7 +63,7 @@ public class AlbumImagemController {
             )
             @RequestParam("files") List<MultipartFile> files,
 
-            @Parameter(description = "ID do álbum", required = true, example = "123")
+            @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long albumId) {
 
         List<AlbumImagem> models = files.stream()
@@ -87,7 +87,7 @@ public class AlbumImagemController {
     @Transactional(readOnly = true)
     @GetMapping("/download/{albumId}")
     public ResponseEntity<Resource> download(
-            @Parameter(description = "ID do álbum", required = true, example = "123", in = ParameterIn.PATH)
+            @Parameter(description = "ID do álbum", required = true, in = ParameterIn.PATH)
             @PathVariable Long albumId) {
 
         List<AlbumImagem> models = service.downloadByAlbumId(albumId);
@@ -112,7 +112,7 @@ public class AlbumImagemController {
     @Transactional(readOnly = true)
     @GetMapping("/download/storage-key")
     public ResponseEntity<Resource> downloadByStorageKey(
-            @Parameter(description = "Chave do arquivo no storage", required = true, example = "albuns/123/capa-1.jpg", in = ParameterIn.QUERY)
+            @Parameter(description = "Chave do arquivo no storage", required = true, in = ParameterIn.QUERY)
             @RequestParam String key) {
 
         AlbumImagem model = service.downloadByStorageKey(key);
@@ -137,7 +137,7 @@ public class AlbumImagemController {
     @Transactional(readOnly = true)
     @GetMapping("/recover-metadata/{albumId}")
     public ResponseEntity<List<AlbumImagemResponse>> recoverMetadataByAlbumId(
-            @Parameter(description = "ID do álbum", required = true, example = "123")
+            @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long albumId) {
 
         List<AlbumImagem> models = service.recoverMetadataByAlbumId(albumId);
@@ -155,7 +155,7 @@ public class AlbumImagemController {
     @Transactional
     @DeleteMapping("/delete/{albumId}")
     public ResponseEntity<Void> deleteByAlbumId(
-            @Parameter(description = "ID do álbum", required = true, example = "123")
+            @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long albumId) {
 
         service.deleteByAlbumId(albumId);
@@ -173,7 +173,7 @@ public class AlbumImagemController {
     @Transactional
     @DeleteMapping("/delete/storage-key")
     public ResponseEntity<Void> deleteByStorageKey(
-            @Parameter(description = "Chave do arquivo no storage", required = true, example = "albuns/123/capa-1.jpg", in = ParameterIn.QUERY)
+            @Parameter(description = "Chave do arquivo no storage", required = true, in = ParameterIn.QUERY)
             @RequestParam String key) {
 
         service.deleteByStorageKey(key);

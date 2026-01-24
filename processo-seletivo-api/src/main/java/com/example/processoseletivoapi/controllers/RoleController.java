@@ -80,7 +80,7 @@ public class RoleController {
                     required = true
             )
             @RequestBody RoleRequest request,
-            @Parameter(description = "ID da role", example = "1", required = true)
+            @Parameter(description = "ID da role", required = true)
             @PathVariable Long id
     ) {
         Role model = service.update(mapper.requestToModel(request), id);
@@ -101,7 +101,7 @@ public class RoleController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID da role", example = "1", required = true)
+            @Parameter(description = "ID da role", required = true)
             @PathVariable Long id
     ) {
         service.delete(id);

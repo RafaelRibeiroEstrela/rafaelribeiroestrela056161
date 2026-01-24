@@ -77,7 +77,7 @@ public class ArtistaController {
                     content = @Content(schema = @Schema(implementation = ArtistaRequest.class))
             )
             @org.springframework.web.bind.annotation.RequestBody ArtistaRequest request,
-            @Parameter(description = "ID do artista", example = "1", required = true)
+            @Parameter(description = "ID do artista", required = true)
             @PathVariable Long id
     ) {
         Artista model = service.update(mapper.requestToModel(request), id);
@@ -97,7 +97,7 @@ public class ArtistaController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID do artista", example = "1", required = true)
+            @Parameter(description = "ID do artista", required = true)
             @PathVariable Long id
     ) {
         service.delete(id);
@@ -133,7 +133,7 @@ public class ArtistaController {
     @Transactional(readOnly = true)
     @GetMapping("/{id}")
     public ResponseEntity<ArtistaResponse> findById(
-            @Parameter(description = "ID do artista", example = "1", required = true)
+            @Parameter(description = "ID do artista", required = true)
             @PathVariable Long id
     ) {
         Artista model = service.findById(id);

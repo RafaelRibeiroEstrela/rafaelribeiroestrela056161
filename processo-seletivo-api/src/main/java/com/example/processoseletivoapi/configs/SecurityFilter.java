@@ -1,7 +1,6 @@
 package com.example.processoseletivoapi.configs;
 
 import com.example.processoseletivoapi.exceptions.AuthorizationException;
-import com.example.processoseletivoapi.models.RateLimit;
 import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.User;
 import com.example.processoseletivoapi.services.RateLimitService;
@@ -14,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,9 +35,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final RoleService roleService;
     private final RateLimitService rateLimitService;
 
-    @Value("${environment}")
-    private String environment;
-
     public SecurityFilter(TokenService tokenService, UserService userService, RoleService roleService, RateLimitService rateLimitService) {
         this.tokenService = tokenService;
         this.userService = userService;
@@ -51,11 +46,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        if (environment.equals("dev")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         try {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {

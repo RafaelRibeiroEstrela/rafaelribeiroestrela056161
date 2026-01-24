@@ -132,12 +132,10 @@ public class AlbumController {
             @ApiResponse(responseCode = "200", description = "Página de álbuns")
     })
     public ResponseEntity<Page<AlbumResponse>> find(
-            @Parameter(description = "Se TRUE, retorna apenas álbuns que possuem artistas; se FALSE, apenas os que não possuem; se null, ignora o filtro",
-                    example = "true")
+            @Parameter(description = "Se TRUE, retorna apenas álbuns que possuem artistas; se FALSE, apenas os que não possuem; se null, ignora o filtro")
             @RequestParam(required = false) Boolean possuiCantor,
 
-            @Parameter(description = "Filtra por nome do artista (parcial). Se null, ignora o filtro",
-                    example = "Chico")
+            @Parameter(description = "Filtra por nome do artista (parcial). Se null, ignora o filtro")
             @RequestParam(required = false) String nomeArtista,
 
             @Parameter(description = "Pagina inicial da paginação")

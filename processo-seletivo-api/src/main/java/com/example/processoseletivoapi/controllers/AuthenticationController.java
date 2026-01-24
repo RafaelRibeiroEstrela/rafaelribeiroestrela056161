@@ -67,10 +67,9 @@ public class AuthenticationController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             @Parameter(
-                    description = "Token no formato: Bearer <token>",
-                    example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    description = "Token"
             )
-            @RequestHeader("Authorization") String token
+            @RequestHeader String token
     ) {
         service.logout(token);
         return ResponseEntity.ok().build();
@@ -84,9 +83,9 @@ public class AuthenticationController {
     @PutMapping("/refresh-token")
     public ResponseEntity<String> refreshToken(
             @Parameter(
-                    description = "Token antigo"
+                    description = "Token"
             )
-            @RequestHeader("token") String token
+            @RequestHeader String token
     ) {
         String newToken = tokenService.refreshToken(token);
         return ResponseEntity.ok().body(newToken);
