@@ -47,7 +47,7 @@ public class AuthenticationController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = LoginRequest.class),
                             examples = @ExampleObject(value = """
-                                    { "username": "usuario", "password": "senha" }
+                                    { "username": "admin", "password": "admin" }
                                     """)
                     )
             )

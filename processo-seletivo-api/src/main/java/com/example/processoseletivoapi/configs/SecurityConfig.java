@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_PATHS).permitAll()
                         .requestMatchers(HttpMethod.GET,"/v1/roles/all").permitAll()
                         .requestMatchers(HttpMethod.POST, "v1/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/minio/miniobucket/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(obj -> obj.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

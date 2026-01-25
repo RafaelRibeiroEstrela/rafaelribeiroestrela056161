@@ -2,11 +2,9 @@ package com.example.processoseletivoapi.storages.impl;
 
 import com.example.processoseletivoapi.exceptions.StorageException;
 import com.example.processoseletivoapi.storages.StorageClient;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import io.minio.errors.MinioException;
+import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class MinioStorageClient implements StorageClient {
@@ -22,6 +21,8 @@ public class MinioStorageClient implements StorageClient {
     private String bucket;
 
     private final MinioClient client;
+
+    private static final int TEMPO_EXPIRACAO_MINUTOS = 30;
 
     public MinioStorageClient(MinioClient client) {
         this.client = client;

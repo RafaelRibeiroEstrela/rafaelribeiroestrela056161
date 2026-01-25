@@ -3,6 +3,8 @@ package com.example.processoseletivoapi.models;
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tb_albuns_imagens")
 public class AlbumImagem {
@@ -16,8 +18,11 @@ public class AlbumImagem {
     private String fileContentType;
     private String fileHash;
     private String storageKey;
+    private LocalDateTime createdAt;
     @Transient
     private byte[] content;
+    @Transient
+    private String linkPreAssinado;
 
     public AlbumImagem() {
     }
@@ -92,6 +97,17 @@ public class AlbumImagem {
         this.storageKey = storageKey;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        if (createdAt == null) {
+            throw new BusinessException("O momento em que o arquivo foi criado é obrigatório");
+        }
+        this.createdAt = createdAt;
+    }
+
     public byte[] getContent() {
         return content;
     }
@@ -101,5 +117,13 @@ public class AlbumImagem {
             throw new BusinessException("O content do arquivo é obrigatório");
         }
         this.content = content;
+    }
+
+    public String getLinkPreAssinado() {
+        return linkPreAssinado;
+    }
+
+    public void setLinkPreAssinado(String linkPreAssinado) {
+        this.linkPreAssinado = linkPreAssinado;
     }
 }

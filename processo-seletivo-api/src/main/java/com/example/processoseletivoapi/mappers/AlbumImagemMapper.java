@@ -22,7 +22,7 @@ public class AlbumImagemMapper {
 
     public AlbumImagemResponse modelToResponse(AlbumImagem model) {
         if (model == null) return null;
-        return new AlbumImagemResponse(model.getId(), model.getAlbumId(), model.getFileName(), model.getFileContentType(), model.getFileHash(), model.getStorageKey());
+        return new AlbumImagemResponse(model.getId(), model.getAlbumId(), model.getFileName(), model.getFileContentType(), model.getFileHash(), model.getStorageKey(), model.getLinkPreAssinado());
     }
 
 

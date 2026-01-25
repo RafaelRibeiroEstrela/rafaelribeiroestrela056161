@@ -2,12 +2,15 @@ package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
+import com.example.processoseletivoapi.exceptions.StorageException;
 import com.example.processoseletivoapi.models.AlbumImagem;
 import com.example.processoseletivoapi.repositories.AlbumImagemRepository;
 import com.example.processoseletivoapi.storages.StorageClient;
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,11 +20,16 @@ public class AlbumImagemService {
     private final AlbumImagemRepository repository;
     private final StorageClient storageClient;
     private final Tika tika;
+    private final TokenService tokenService;
 
-    public AlbumImagemService(AlbumImagemRepository repository, StorageClient storageClient, Tika tika) {
+    @Value("${server.port}")
+    private String applicationPort;
+
+    public AlbumImagemService(AlbumImagemRepository repository, StorageClient storageClient, Tika tika, TokenService tokenService) {
         this.repository = repository;
         this.storageClient = storageClient;
         this.tika = tika;
+        this.tokenService = tokenService;
     }
 
     public AlbumImagem upload(AlbumImagem model) {
@@ -32,8 +40,21 @@ public class AlbumImagemService {
         String key = "/albuns/" + model.getAlbumId() + "/" + hash + "/" + model.getFileName();
         model.setFileHash(hash);
         model.setStorageKey(key);
+        model.setCreatedAt(LocalDateTime.now());
+        model.setLinkPreAssinado(gerarUrl(key));
         repository.save(model);
         storageClient.upload(model.getContent(), model.getStorageKey());
+        return model;
+    }
+
+    public AlbumImagem downloadLinkPreAssinado(String token) {
+        if (!tokenService.isTokenPreAssinadoValido(token)) {
+            throw new StorageException("Tempo expirado para recuperar o arquivo");
+        }
+        String key = tokenService.extractUsername(token);
+        AlbumImagem model = repository.findByStorageKey(key).orElseThrow(() -> new ResourceNotFoundException("Nenhum arquivo encontrado"));
+        byte[] content = storageClient.download(key);
+        model.setContent(content);
         return model;
     }
 
@@ -80,6 +101,10 @@ public class AlbumImagemService {
         } catch (Exception e) {
             return false;
         }
+    }
 
+    private String gerarUrl(String key) {
+        String token = tokenService.gerarTokenParaLinkPreAssinado(key);
+        return "http://localhost:" + applicationPort + "/minio/miniobucket/" + token;
     }
 }

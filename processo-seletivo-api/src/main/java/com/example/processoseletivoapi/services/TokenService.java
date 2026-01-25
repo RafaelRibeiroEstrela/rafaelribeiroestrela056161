@@ -27,6 +27,7 @@ public class TokenService {
     @Value("${security.issuer}")
     private String issuer;
     private static final int EXPIRATION_TIME = 300;
+    private static final int EXPIRATION_TIME_LINK_PRE_ASSINADO = 1800;
 
     private final TokenRepository tokenRepository;
     private final UserService userService;
@@ -36,6 +37,29 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
         this.userService = userService;
         this.roleService = roleService;
+    }
+
+    public String gerarTokenParaLinkPreAssinado(String key) {
+        Instant now = Instant.now();
+        Instant exp = now.plusSeconds(EXPIRATION_TIME_LINK_PRE_ASSINADO);
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        return JWT.create()
+                .withSubject(key)
+                .withIssuedAt(Date.from(now))
+                .withExpiresAt(Date.from(exp))
+                .sign(algorithm);
+    }
+
+    public boolean isTokenPreAssinadoValido(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
+            verifier.verify(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            return false;
+        }
     }
 
     public String generate(String username) {
