@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +27,7 @@ public class ArquivoController {
     }
 
     @Transactional(readOnly = true)
-    //@Hidden
+    @Hidden
     @GetMapping("/minio/miniobucket/{token}")
     public ResponseEntity<Resource> downloadByStorageKey(
             @Parameter(description = "Chave do arquivo no storage", required = true, in = ParameterIn.QUERY)

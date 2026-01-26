@@ -91,7 +91,7 @@ public class AlbumController {
             )
             @RequestBody AlbumRequest request,
 
-            @Parameter(description = "ID do álbum", example = "10", required = true)
+            @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long id
     ) {
         Album model = service.update(mapper.requestToModel(request), id, request.artistaIdList());
@@ -106,7 +106,7 @@ public class AlbumController {
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID do álbum", example = "10", required = true)
+            @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long id
     ) {
         service.delete(id);
@@ -163,7 +163,7 @@ public class AlbumController {
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<AlbumResponse> findById(
-            @Parameter(description = "ID do álbum", example = "10", required = true)
+            @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long id
     ) {
         Album model = service.findById(id);
