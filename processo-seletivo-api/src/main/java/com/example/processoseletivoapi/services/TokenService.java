@@ -10,14 +10,14 @@ import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.Token;
 import com.example.processoseletivoapi.models.User;
 import com.example.processoseletivoapi.repositories.TokenRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class TokenService {

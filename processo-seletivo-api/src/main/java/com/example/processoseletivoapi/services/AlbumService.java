@@ -7,10 +7,7 @@ import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
 import com.example.processoseletivoapi.repositories.AlbumImagemRepository;
 import com.example.processoseletivoapi.repositories.AlbumRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
