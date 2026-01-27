@@ -43,6 +43,23 @@ class RegionalServiceTest {
     }
 
     @Test
+    void testSincronizarComSucessoAtualizandoDados() {
+        RegionalResponse response = new RegionalResponse(1L, "Regional teste ", null);
+        Regional model = new Regional(null, 1L, "RegionalTeste", null);
+        Regional modelSaved = new Regional(1L, 1L, "RegionalTesteX", true);
+        List<RegionalResponse> reginais = List.of(response);
+        Mockito.when(client.findAll()).thenReturn(reginais);
+        Mockito.when(repository.findAll()).thenReturn(List.of(modelSaved));
+        Mockito.when(mapper.responseToModel(response)).thenReturn(model);
+        Assertions.assertAll(() -> service.sync());
+    }
+
+    @Test
+    void testBuscarComSucesso() {
+        Assertions.assertAll(() -> service.findAll());
+    }
+
+    @Test
     void testSincronizarComFalhaApiIndisponivel() {
         FeignException feignException = Mockito.mock(FeignException.class);
         Mockito.when(client.findAll()).thenThrow(feignException);

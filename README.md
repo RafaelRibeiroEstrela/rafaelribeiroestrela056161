@@ -13,9 +13,10 @@ Este repositório contém a implementação da API desenvolvida para o desafio t
 ## 🚀 Tecnologias Utilizadas
 
 - **Java 21**
-- **Spring Framework** (Spring Boot, Spring Data)
+- **Spring Framework** (Spring Boot, Spring Data, Spring Security)
 - **PostgreSQL** – Banco de dados relacional
 - **MinIO** – Armazenamento de arquivos (compatível com S3)
+- **Redis** – Banco de dados NoSQL
 - **Docker & Docker Compose**
 - Arquitetura **MVC**, com aplicação de **padrões de projeto** para melhor organização e manutenção
 
