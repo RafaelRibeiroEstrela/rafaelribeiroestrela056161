@@ -83,9 +83,7 @@ public class AlbumImagemService {
 
     public void deleteByAlbumId(long albumId) {
         List<AlbumImagem> models = repository.findByAlbumId(albumId);
-        models.forEach(obj -> {
-            storageClient.delete(obj.getStorageKey());
-        });
+        models.forEach(obj -> storageClient.delete(obj.getStorageKey()));
         repository.deleteByAlbumId(albumId);
     }
 
