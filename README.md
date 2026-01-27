@@ -56,6 +56,7 @@ docker system prune -a --volumes -f
 
 ```bash
 git clone https://github.com/RafaelRibeiroEstrela/rafaelribeiroestrela056161.git
+cd rafaelribeiroestrela056161
 cd processo-seletivo-api
 ```
 
