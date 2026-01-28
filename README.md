@@ -103,7 +103,7 @@ http://localhost:26000/swagger-ui.html
 A aplicação utiliza **JWT (JSON Web Token)** para autenticação.
 
 ### Fluxo de autenticação:
-1. Execute o endpoint de **login** com o *username* e *password* pré-definidos.
+1. Execute o endpoint de **login** com o *username=admin* e *password=admin* pré-definidos.
 2. Copie o token retornado.
 3. Utilize o botão **Authorize** no Swagger para informar o token.
 
