@@ -1,32 +1,41 @@
-Nome do participante: Rafael Ribeiro Estrela
+# 🚀 Desafio SEPLAG MT – API Backend Java
 
-N° Inscrição : 16428
-
-Documentação:
-
-# 🛠️ API – Desafio Seplag MT (Desenvolvedor Java Backend)
-
-Este repositório contém a implementação da API desenvolvida para o desafio técnico do ** PROCESSO SELETIVO CONJUNTO Nº 001/2026/SEPLAG/SEFAZ/SEDUC/SESP/PJC/PMMT/CBMMT/DETRAN/POLITEC/SEJUS/SEMA/SEAF/SINFRA/SECITECI/PGE/MTPREV** para o cargo de **Engenheiro da Computação/SÊNIOR**.
+**Participante:** Rafael Ribeiro Estrela  \
+**Nº de Inscrição:** 16428
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 📌 Visão Geral
+
+Este repositório contém a implementação da **API RESTful** desenvolvida como parte do **PROCESSO SELETIVO CONJUNTO Nº 001/2026/SEPLAG/SEFAZ/SEDUC/SESP/PJC/PMMT/CBMMT/DETRAN/POLITEC/SEJUS/SEMA/SEAF/SINFRA/SECITECI/PGE/MTPREV**, para o cargo de **Engenheiro da Computação – Sênior**.
+
+A solução foi projetada com foco em **qualidade de código**, **boas práticas de engenharia de software**, **segurança**, **escalabilidade** e **manutenibilidade**, atendendo integralmente aos requisitos técnicos propostos no desafio.
+
+---
+
+## 🧰 Tecnologias Utilizadas
 
 - **Java 21**
-- **Spring Framework** (Spring Boot, Spring Data, Spring Security)
+- **Spring Boot**
+  - Spring Web
+  - Spring Data JPA
+  - Spring Security
 - **PostgreSQL** – Banco de dados relacional
-- **MinIO** – Armazenamento de arquivos (compatível com S3)
-- **Redis** – Banco de dados NoSQL
-- **Docker & Docker Compose**
-- Arquitetura **MVC**, com aplicação de **padrões de projeto** para melhor organização e manutenção
+- **Redis** – Cache e controle de rate limit
+- **MinIO** – Armazenamento de arquivos (compatível com Amazon S3)
+- **Flyway** – Versionamento e migração de banco de dados
+- **Docker & Docker Compose** – Orquestração do ambiente
+- **Swagger / OpenAPI** – Documentação dos endpoints
+
+A aplicação segue o padrão arquitetural **MVC em camadas**, com aplicação de **SOLID**, **Clean Code** e **padrões de projeto**, visando clareza, baixo acoplamento e fácil evolução.
 
 ---
 
-## 🐳 Preparando o Ambiente com Docker - SEGUIR COM ATENÇÃO AS INSTRUÇÕES ABAIXO PARA QUE A APLICAÇÃO SEJA EXECUTADA COM SUCESSO !!!!
+## 🐳 Preparação do Ambiente (Docker)
 
-Antes de subir os containers da aplicação, recomenda-se **limpar o ambiente Docker** para evitar conflitos com containers, volumes e redes antigas.
+⚠️ **Atenção:** recomenda-se fortemente realizar a limpeza do ambiente Docker antes de executar a aplicação, evitando conflitos com containers, volumes ou redes pré-existentes.
 
-### 🔄 Limpeza do Docker
+### 🔄 Limpeza Completa do Docker
 
 ```bash
 # Parar todos os containers em execução
@@ -44,7 +53,7 @@ docker volume rm $(docker volume ls -q)
 # Remover todas as redes
 docker network rm $(docker network ls -q)
 
-# Limpeza completa e segura
+# Limpeza completa do sistema Docker
 docker system prune -a --volumes -f
 ```
 
@@ -52,117 +61,125 @@ docker system prune -a --volumes -f
 
 ## ▶️ Executando a Aplicação
 
-### 1. Clone o repositório
+### 1️⃣ Clone o repositório
 
 ```bash
 git clone https://github.com/RafaelRibeiroEstrela/rafaelribeiroestrela056161.git
-cd rafaelribeiroestrela056161
-cd processo-seletivo-api
+cd rafaelribeiroestrela056161/processo-seletivo-api
 ```
 
-### 2. Suba os containers com Docker Compose
-
-Na pasta principal do projeto, execute o comando:
+### 2️⃣ Suba os containers
 
 ```bash
-docker compose -f "docker-compose.yml" up -d --build
+docker compose -f docker-compose.yml up -d --build
 ```
 
-O sistema irá subir os seguintes serviços:
+### 🔧 Serviços Inicializados
 
-- API Java Spring Boot
-- Banco de dados PostgreSQL
-- Servidor MinIO (acessível via browser)
-- Banco de dados Redis
+- API Java (Spring Boot)
+- PostgreSQL
+- Redis
+- MinIO (com console web)
+
+Todo o ambiente é inicializado automaticamente, incluindo a criação e versionamento do banco de dados via **Flyway**.
 
 ---
 
-## 🧪 Testando a API
+## 🧪 Testes e Documentação da API
 
-A API expõe endpoints RESTful documentados via Swagger (ou Postman, se aplicável).
+A API está documentada via **Swagger/OpenAPI**.
 
-- Acesse a documentação:
-
+📎 Acesse:
 ```
 http://localhost:26000/swagger-ui.html
 ```
 
-- Utilize ferramentas como **Postman** ou **curl** para testar os endpoints.
+É possível testar todos os endpoints diretamente pelo Swagger ou utilizando ferramentas como **Postman** ou **curl**.
 
 ---
 
-## Itens atendidos:
+## 🔐 Autenticação e Segurança
 
-A. Arquitetura e Estrutura
+A aplicação utiliza **JWT (JSON Web Token)** para autenticação.
 
-A1 - Organização e camadas - Projeto estruturado em camadas (controller, service, repository, model). ✅
+### Fluxo de autenticação:
+1. Execute o endpoint de **login** com o *username* e *password* pré-definidos.
+2. Copie o token retornado.
+3. Utilize o botão **Authorize** no Swagger para informar o token.
 
-    O projeto foi desenvolvido utilizando arquitetura em camadas, sendo que a camada mais acima se comunica com a camada mais abaixo, utilizando a classe de dominio(model).
+⏱️ O token possui **tempo de expiração de 5 minutos**.
 
-    ![alt text](image.png)
+Além disso, a aplicação conta com:
+- **CORS configurado** para bloqueio de domínios externos
+- **Rate Limit** baseado em Redis
 
+---
 
-A2 - Versionamento e documentação - Endpoints versionados e descritos via Swagger/OpenAPI. ✅
-A3 - Migrations e README - Uso de Flyway e documentação com instruções de execução. ✅
+## 🔄 WebSocket (Funcionalidade Sênior)
 
-    Os arquivos do banco de dados versionados estão no diretorio db.migrations conforme imagem abaixo.
+A API disponibiliza notificações em tempo real via **WebSocket**.
 
-    ![alt text](image-1.png)
+### Configuração:
+```
+WS_URL = ws://localhost:26000/ws
+TOPIC  = /topic/albuns/novos
+```
 
-    Ao subir a aplicação para o docker, o banco de dados será criado e estruturado conforme esses arquivos automaticamente.
+📂 Um **cliente de exemplo em Python** está disponível no diretório:
+```
+client-websocket/
+```
 
-B. Funcionalidades Técnicas
+---
 
-B1 - CRUD e endpoints REST - Implementação funcional dos verbos POST, PUT, GET, DELETE. - ✅
-B2 - Paginação e Filtros - Consultas com ordenação e filtros de nome. - ✅
-B3 - Upload/MinIO - Upload de arquivos e geração de presigned URLs. - ✅
-B4 - Autenticação JWT - Implementação com expiração e renovação de token. - ✅
+## ❤️ Health Check e Liveness
 
-    Caso queira testar pelo Swagger, utilize o endpoint de login, com o username e password predefinidos
+A aplicação expõe endpoints de **health check**, permitindo validação de disponibilidade e prontidão do serviço, compatível com ambientes orquestrados (Docker Swarm, Kubernetes, OpenShift).
 
-    ![alt text](image-2.png)
+---
 
-    Em seguida, coloque o token gerado no Authorize do Swagger
+## 📋 Requisitos Atendidos
 
-    ![alt text](image-3.png)
+### 🏗️ Arquitetura e Estrutura
+- Organização em camadas (Controller, Service, Repository, Model) ✅
+- Endpoints versionados e documentados via Swagger ✅
+- Migrations automáticas com Flyway ✅
 
-    Isso fara com que todas as requisições utilizem o token inserido.
+### ⚙️ Funcionalidades Técnicas
+- CRUD completo (POST, PUT, GET, DELETE) ✅
+- Paginação, ordenação e filtros ✅
+- Upload de arquivos e Presigned URLs (MinIO) ✅
+- Autenticação JWT com expiração ✅
+- CORS e Rate Limit ✅
+- WebSocket e sincronização em tempo real ✅
+- Health Check / Liveness ✅
 
-    Não se esqueça que o token irá expirar após 5 minutos.
+### 🧠 Boas Práticas
+- Clean Code e separação de responsabilidades ✅
+- Aplicação de conceitos do livro *Clean Code* – Robert C. Martin ✅
+- Testes unitários nas principais regras de negócio (Album, Artista e Regionais) ✅
+- Histórico de commits coerente e incremental ✅
+- Código preparado para evolução e escalabilidade ✅
 
-B5 - Segurança (CORS e Rate Limit) - Bloqueio de domínios externos e limite de requisições. - ✅
-B6 - WebSocket e Sincronização (Sênior) - Notificações em tempo real e sincronização de regionais. - ✅
+---
 
-    Para sincronizar com o websocket, utilizar os parametros:
-        WS_URL = "ws://localhost:26000/ws"
-        TOPIC = "/topic/albuns/novos"
+## 📈 Escalabilidade e Manutenção
 
-    Tem um client pronto em python caso queira testar. Está na pasta client-websocket
+A solução está preparada para:
+- Execução em **ambientes distribuídos**
+- Escala horizontal com múltiplas instâncias
+- Integração com **Docker Swarm**, **Kubernetes** ou **OpenShift**
 
-B7 - Health Checks / Liveness - Endpoints de verificação do serviço. - ✅
+O uso do **Redis** contribui diretamente para segurança, performance e controle de requisições em cenários de alta concorrência.
 
-C. Boas Práticas e Qualidade
+---
 
-C1 - Clean Code e legibilidade - Código limpo, nomeações adequadas e separação de responsabilidades. - ✅
+## ✅ Status do Projeto
 
-    Para essa finalidade foi utilizado conceitos do livro Código Limpo: Habilidades Práticas do Agile Software do autor Robert C. Martin
+> ✔️ **Projeto finalizado com sucesso**  \
+> 📦 Pronto para avaliação técnica
 
-C2 - Testes unitários e integração - Cobertura mínima de testes nos módulos principais. - ✅
+---
 
-    Foi criado testes unitários das classes de negócio, envolvendo Album, Artista e Regionais.
-C3 - Commits e versionamento - Histórico coerente e incremental. - ✅
-C4 - README técnico e justificativas - Clareza nas decisões e priorização. - ✅
+📌 *Obrigado pela oportunidade de participar deste processo seletivo.*
 
-    Implementar as classes de negócio foram priorizadas, pois a implementação do dominio do negócio ou do problema a ser resolvedo é que cerne o desenvolvimento de um software.
-    Desenvolvimento de funcionalidades "tecnicas" como segurança, armazenamento, configurações foram desenvolvidas em um segundo momento.
-
-C5 - Escalabilidade e manutenção - Soluções preparadas para evolução. - ✅
-
-    A aplicação está preparada para rodar em arquiteturas mais robustas como microsserviços, e em infraestruturas mais complexas como docker-swarm, openshift ou kubernetes.
-    O redis é uma tecnologia excencial para a escalabilidade, uma vez que trás benefícios em uma arquitetura de multiplas instancias, principalmente na parte de segurança e rate-limit.
-    A manutenção é facilitada, uma vez que o código está organizado em camadas, e em classes bem definidas, utilizando conceitos de SOLID e padrões de projeto.
-
-## ✅ Status
-
-> ✅ Projeto concluído com sucesso  
-> Pronto para avaliação técnica
