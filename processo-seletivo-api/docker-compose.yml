@@ -14,13 +14,15 @@ services:
       - minio
       - redis
     environment:
-      POSTGRES_URL: jdbc:postgresql://db:5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASS: postgres
-      STORAGE_ENDPOINT: http://minio:9000
-      STORAGE_BUCKET_NAME: desafio-processo-seletivo-seplag-bucket
-      STORAGE_ACCESS_KEY: user
-      STORAGE_SECRET_KEY: 12345678
+      POSTGRES_URL: jdbc:postgresql://postgres:5432
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      MINIO_URL: http://minio:9000
+      MINIO_BUCKET: miniobucket
+      MINIO_USERNAME: user
+      MINIO_PASSWORD: 12345678
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
   postgres:
     image: postgres
@@ -28,7 +30,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=desafio-processo-seletivo-seplag-db
+      - POSTGRES_DB=processo-seletivo-db
     ports:
       - "5432:5432"
     networks:
