@@ -23,6 +23,7 @@ services:
       MINIO_PASSWORD: 12345678
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      ENVIRONMENT: test
 
   postgres:
     image: postgres
