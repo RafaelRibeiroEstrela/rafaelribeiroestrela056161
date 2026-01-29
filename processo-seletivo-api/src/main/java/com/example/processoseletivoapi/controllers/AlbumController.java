@@ -124,7 +124,7 @@ public class AlbumController {
     })
     public ResponseEntity<Page<AlbumResponse>> find(
             @Parameter(description = "Se TRUE, retorna apenas álbuns que possuem artistas; se FALSE, apenas os que não possuem; se null, ignora o filtro")
-            @RequestParam(required = false) Boolean possuiCantor,
+            @RequestParam(required = false) Boolean possuiCantorOuBanda,
 
             @Parameter(description = "Filtra por nome do artista (parcial). Se null, ignora o filtro")
             @RequestParam(required = false) String nomeArtista,
@@ -139,7 +139,7 @@ public class AlbumController {
             @RequestParam(defaultValue = "ASC", required = false) Sort.Direction ordenacao
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(ordenacao, "nome"));
-        Page<Album> albuns = service.find(possuiCantor, nomeArtista, pageable);
+        Page<Album> albuns = service.find(possuiCantorOuBanda, nomeArtista, pageable);
         return ResponseEntity.ok().body(albuns.map(mapper::modelToResponse));
     }
 

@@ -7,6 +7,8 @@ import com.example.processoseletivoapi.models.Artista;
 import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
 import com.example.processoseletivoapi.repositories.AlbumRepository;
 import com.example.processoseletivoapi.repositories.ArtistaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -68,8 +70,9 @@ public class ArtistaService {
         repository.deleteById(id);
     }
 
-    public List<Artista> findAll() {
-        return repository.findAll();
+    public Page<Artista> find(String nomeArtista, Pageable pageable) {
+        nomeArtista = nomeArtista == null || nomeArtista.trim().isEmpty() ? null : "%" + nomeArtista + "%";
+        return repository.find(nomeArtista, pageable);
     }
 
     public Artista findById(long id) {
