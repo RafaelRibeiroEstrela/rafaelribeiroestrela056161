@@ -32,7 +32,7 @@ public class ArtistaService {
             Set<AlbumArtista> albumArtistas = new HashSet<>();
             for (Long albumId : listaAlbumId) {
                 if (!albumRepository.existsById(albumId)) {
-                    throw new BusinessException("Nenhum album encontrado com id = " + albumId);
+                    throw new ResourceNotFoundException("Nenhum album encontrado com id = " + albumId);
                 }
                 albumArtistas.add(new AlbumArtista(model.getId(), albumId));
             }
@@ -51,7 +51,7 @@ public class ArtistaService {
             listaAlbumArtista.removeIf(obj -> !listaAlbumId.contains(obj.getId().getAlbumId()));
             for (Long albumId : listaAlbumId) {
                 if (!albumRepository.existsById(albumId)) {
-                    throw new BusinessException("Nenhum album encontrado com id = " + albumId);
+                    throw new ResourceNotFoundException("Nenhum album encontrado com id = " + albumId);
                 }
                 AlbumArtista albumArtista = new AlbumArtista(id, albumId);
                 if (!listaAlbumArtista.contains(albumArtista)) {

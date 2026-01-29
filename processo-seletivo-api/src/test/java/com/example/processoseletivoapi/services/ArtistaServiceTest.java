@@ -2,9 +2,9 @@ package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
-import com.example.processoseletivoapi.models.AlbumArtista;
 import com.example.processoseletivoapi.models.Artista;
 import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
+import com.example.processoseletivoapi.repositories.AlbumRepository;
 import com.example.processoseletivoapi.repositories.ArtistaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,10 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-/*
 
 @ExtendWith(MockitoExtension.class)
 class ArtistaServiceTest {
@@ -31,11 +30,35 @@ class ArtistaServiceTest {
     @Mock
     private AlbumArtistaRepository albumArtistaRepository;
 
+    @Mock
+    private AlbumRepository albumRepository;
+
     @Test
     void testCriarArtistaComSucesso() {
         Assertions.assertAll(() -> new Artista(null, "Artista teste"));
         Artista artista = new Artista(1L, "Artista teste");
-        Assertions.assertAll(() -> service.create(artista));
+        Set<Long> listaAlbumId = Set.of(1L);
+        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(repository.save(artista)).thenReturn(artista);
+        Assertions.assertEquals(artista, service.create(artista, listaAlbumId));
+    }
+
+    @Test
+    void testCriarArtistaComSucessoComNenhumAlbum() {
+        Assertions.assertAll(() -> new Artista(null, "Artista teste"));
+        Artista artista = new Artista(1L, "Artista teste");
+        Set<Long> listaAlbumId = Set.of();
+        Mockito.when(repository.save(artista)).thenReturn(artista);
+        Assertions.assertEquals(artista, service.create(artista, listaAlbumId));
+    }
+
+    @Test
+    void testCriarArtistaFalhaNenhumAlbumEncontrado() {
+        Artista artista = new Artista(1L, "Artista teste");
+        Set<Long> listaAlbumId = Set.of(1L);
+        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(false);
+        Mockito.when(repository.save(artista)).thenReturn(artista);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.create(artista, listaAlbumId));
     }
 
     @Test
@@ -44,12 +67,34 @@ class ArtistaServiceTest {
         Assertions.assertThrows(BusinessException.class, () -> new Artista(null, null));
     }
 
+
     @Test
     void testAtualizarArtistaComSucesso() {
         long id = 1L;
         Artista artista = new Artista(1L, "Artista teste atualizado");
+        Set<Long> listaAlbumId = Set.of(1L);
         Mockito.when(repository.save(artista)).thenReturn(artista);
-        Assertions.assertEquals(artista, service.update(artista, id));
+        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(true);
+        Assertions.assertEquals(artista, service.update(artista, listaAlbumId, id));
+    }
+
+    @Test
+    void testAtualizarArtistaComSucessoComNenhumAlbum() {
+        long id = 1L;
+        Artista artista = new Artista(1L, "Artista teste atualizado");
+        Set<Long> listaAlbumId = Set.of();
+        Mockito.when(repository.save(artista)).thenReturn(artista);
+        Assertions.assertEquals(artista, service.update(artista, listaAlbumId, id));
+    }
+
+    @Test
+    void testAtualizarArtistaComFalhaNenhumAlbumEncontrado() {
+        long id = 1L;
+        Artista artista = new Artista(1L, "Artista teste atualizado");
+        Set<Long> listaAlbumId = Set.of(1L);
+        Mockito.when(repository.save(artista)).thenReturn(artista);
+        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(false);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.update(artista, listaAlbumId, id));
     }
 
     @Test
@@ -64,20 +109,12 @@ class ArtistaServiceTest {
     }
 
     @Test
-    void testBuscarArtistaPorAlbumIdComSucesso() {
-        long albumId = 1L;
-        Mockito.when(albumArtistaRepository.findByAlbumId(albumId)).thenReturn(List.of(new AlbumArtista(1L, 1L)));
-        Assertions.assertAll(() -> service.findByAlbumId(albumId));
-    }
-
-    @Test
     void testBuscarArtistaPorIddComSucesso() {
         long id = 1L;
         Artista artista = new Artista(1L, "Artista teste");
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(artista));
         Assertions.assertEquals(artista, service.findById(id));
     }
-
 
 
     @Test
@@ -88,4 +125,3 @@ class ArtistaServiceTest {
     }
 }
 
- */

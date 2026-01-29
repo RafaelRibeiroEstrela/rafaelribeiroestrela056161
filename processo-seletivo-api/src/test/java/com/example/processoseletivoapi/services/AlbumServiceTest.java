@@ -3,6 +3,7 @@ package com.example.processoseletivoapi.services;
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.models.Album;
+import com.example.processoseletivoapi.models.AlbumArtista;
 import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
 import com.example.processoseletivoapi.repositories.AlbumImagemRepository;
 import com.example.processoseletivoapi.repositories.AlbumRepository;
@@ -16,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-/*
+
 @ExtendWith(MockitoExtension.class)
 class AlbumServiceTest {
 
@@ -40,9 +41,8 @@ class AlbumServiceTest {
         Assertions.assertAll(() -> new Album(null, "Album teste"));
         Album albumNovo = new Album(null, "Album teste");
         Album albumSalvo = new Album(1L, "Album teste");
-        Set<Long> artistaIdList = Set.of(1L);
         Mockito.when(repository.save(albumNovo)).thenReturn(albumSalvo);
-        Assertions.assertEquals(albumSalvo, service.create(albumNovo, artistaIdList));
+        Assertions.assertEquals(albumSalvo, service.create(albumNovo));
     }
 
     @Test
@@ -57,9 +57,8 @@ class AlbumServiceTest {
         Album album = new Album(1L, "Album teste");
         Album albumSalvo = new Album(1L, "Album teste");
         long id = 1L;
-        Set<Long> artistaIdList = Set.of(1L);
         Mockito.when(repository.save(album)).thenReturn(albumSalvo);
-        Assertions.assertEquals(albumSalvo, service.update(album, id, artistaIdList));
+        Assertions.assertEquals(albumSalvo, service.update(album, id));
     }
 
     @Test
@@ -68,14 +67,8 @@ class AlbumServiceTest {
         Album album = new Album(1L, "Album teste");
         Album albumSalvo = new Album(1L, "Album teste");
         long id = 1L;
-        Set<Long> artistaIdList = Set.of();
         Mockito.when(repository.save(album)).thenReturn(albumSalvo);
-        Assertions.assertEquals(albumSalvo, service.update(album, id, artistaIdList));
-    }
-
-    @Test
-    void testAtualizarAlbumComFalhaRepetindoMesmoArtistaParaAlbum() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Set.of(1L, 1L));
+        Assertions.assertEquals(albumSalvo, service.update(album, id));
     }
 
 
@@ -107,6 +100,14 @@ class AlbumServiceTest {
         Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
         Assertions.assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
     }
-}
 
- */
+    @Test
+    void testBuscarAlbumPorArtistaIdComSucesso() {
+        long artistaId = 1L;
+        List<AlbumArtista> listaAlbumArtista = List.of(new AlbumArtista(1L, 1L));
+        List<Album> albuns = List.of(new Album(1L, "teste"));
+        Mockito.when(albumArtistaRepository.findByArtistaId(artistaId)).thenReturn(listaAlbumArtista);
+        Mockito.when(repository.findAllById(Mockito.anyCollection())).thenReturn(albuns);
+        Assertions.assertFalse(service.findByArtistaId(artistaId).isEmpty());
+    }
+}
