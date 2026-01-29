@@ -35,8 +35,8 @@ public class SecurityConfig {
             "/ws/**"
     };
 
-    @Value("${security.cors-domain-allowed}")
-    private String corsDomainAllowed;
+    @Value("${environment}")
+    private String environment;
 
     private final SecurityFilter securityFilter;
 
@@ -64,6 +64,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        if (environment.equals("dev")) {
+            return httpSecurity
+                    .cors(Customizer.withDefaults())
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                    .sessionManagement(obj -> obj.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                    .build();
+        }
+
         return httpSecurity
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)

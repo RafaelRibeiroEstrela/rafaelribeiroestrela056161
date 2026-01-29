@@ -68,7 +68,7 @@ public class AlbumController {
             @RequestBody AlbumRequest request
     ) {
         Album model = service.create(mapper.requestToModel(request), request.artistaIdList());
-        webSoket.publicar(model);
+        webSoket.publish(model);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model));
     }
 

@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +36,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final RoleService roleService;
     private final RateLimitService rateLimitService;
 
+    @Value("${environment}")
+    private String environment;
+
     public SecurityFilter(TokenService tokenService, UserService userService, RoleService roleService, RateLimitService rateLimitService) {
         this.tokenService = tokenService;
         this.userService = userService;
@@ -46,6 +50,11 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        if (environment.equals("dev")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -64,9 +73,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 User user = userService.findByUsername(username);
 
-                rateLimitService.registrarAcesso(username);
+                rateLimitService.registerAccess(username);
 
-                if (!rateLimitService.verificarSeAcessoPermitido(username)) {
+                if (!rateLimitService.isAccessAllowed(username)) {
                     LOGGER.error("Limite de acessos atingido");
                     throw new AuthorizationException("Limite de acessos atingido");
                 }

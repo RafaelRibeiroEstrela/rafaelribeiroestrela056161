@@ -41,7 +41,7 @@ public class AlbumImagemService {
         model.setFileHash(hash);
         model.setStorageKey(key);
         model.setCreatedAt(LocalDateTime.now());
-        model.setLinkPreAssinado(gerarUrl(key));
+        model.setLinkPreAssinado(generateUrl(key));
         repository.save(model);
         storageClient.upload(model.getContent(), model.getStorageKey());
         return model;
@@ -101,8 +101,8 @@ public class AlbumImagemService {
         }
     }
 
-    private String gerarUrl(String key) {
-        String token = tokenService.gerarTokenParaLinkPreAssinado(key);
+    private String generateUrl(String key) {
+        String token = tokenService.generateTokenLinkPreAssinado(key);
         return "http://localhost:" + applicationPort + "/minio/miniobucket/" + token;
     }
 }

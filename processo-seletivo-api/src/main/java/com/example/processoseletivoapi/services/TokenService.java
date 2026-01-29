@@ -39,7 +39,7 @@ public class TokenService {
         this.roleService = roleService;
     }
 
-    public String gerarTokenParaLinkPreAssinado(String key) {
+    public String generateTokenLinkPreAssinado(String key) {
         Instant now = Instant.now();
         Instant exp = now.plusSeconds(EXPIRATION_TIME_LINK_PRE_ASSINADO);
         Algorithm algorithm = Algorithm.HMAC256(secretKey);

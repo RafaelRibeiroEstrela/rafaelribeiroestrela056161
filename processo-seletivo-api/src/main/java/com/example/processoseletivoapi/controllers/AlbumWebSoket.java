@@ -18,7 +18,7 @@ public class AlbumWebSoket {
     }
 
     @Async
-    public void publicar(Album model) {
+    public void publish(Album model) {
         final String endpoint = "/topic/albuns/novos";
         messagingTemplate.convertAndSend(endpoint, mapper.modelToResponse(model));
     }

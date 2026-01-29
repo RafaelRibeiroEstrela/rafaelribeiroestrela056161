@@ -16,7 +16,7 @@ public class RateLimitService {
         this.repository = repository;
     }
 
-    public void registrarAcesso(String username) {
+    public void registerAccess(String username) {
         Optional<RateLimit> optional = repository.findById(username);
         if (optional.isEmpty()) {
             repository.save(new RateLimit(username, LocalDateTime.now()));
@@ -27,7 +27,7 @@ public class RateLimitService {
         }
     }
 
-    public boolean verificarSeAcessoPermitido(String username) {
+    public boolean isAccessAllowed(String username) {
         Optional<RateLimit> optional = repository.findById(username);
         if (optional.isEmpty()) {
             return true;

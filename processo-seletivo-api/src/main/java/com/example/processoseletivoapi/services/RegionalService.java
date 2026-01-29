@@ -30,8 +30,8 @@ public class RegionalService {
             regionaisApi.forEach(obj -> obj.setAtivo(true));
             repository.saveAll(regionaisApi);
         } else {
-            salvarAtualizar(regionaisApi, regionaisDb);
-            inativarAusentes(regionaisApi, regionaisDb);
+            saveUpdate(regionaisApi, regionaisDb);
+            deactivateAbsent(regionaisApi, regionaisDb);
         }
     }
 
@@ -39,7 +39,7 @@ public class RegionalService {
         return repository.findAll();
     }
 
-    private void salvarAtualizar(List<Regional> regionaisApi, List<Regional> regionaisDb) {
+    private void saveUpdate(List<Regional> regionaisApi, List<Regional> regionaisDb) {
         List<Regional> list = new ArrayList<>();
         for (Regional regional : regionaisApi) {
             Optional<Regional> optional = regionaisDb.stream().filter(obj -> obj.getRegionalId().equals(regional.getRegionalId())).findFirst();
@@ -59,7 +59,7 @@ public class RegionalService {
         repository.saveAll(list);
     }
 
-    private void inativarAusentes(List<Regional> regionaisApi, List<Regional> regionaisDb) {
+    private void deactivateAbsent(List<Regional> regionaisApi, List<Regional> regionaisDb) {
         regionaisDb.forEach(obj -> {
             if (!regionaisApi.contains(obj)) {
                 obj.setAtivo(false);

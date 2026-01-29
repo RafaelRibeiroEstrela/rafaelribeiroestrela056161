@@ -54,7 +54,7 @@ public class AlbumImagemController {
     })
     @Transactional
     @PutMapping(value = "/upload/{albumId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<List<AlbumImagemResponse>> uploadImagens(
+    public ResponseEntity<List<AlbumImagemResponse>> upload(
             @Parameter(
                     description = "Lista de arquivos (imagens) para upload",
                     required = true
