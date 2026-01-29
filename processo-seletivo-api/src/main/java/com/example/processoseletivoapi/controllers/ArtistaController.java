@@ -1,9 +1,11 @@
 package com.example.processoseletivoapi.controllers;
 
 import com.example.processoseletivoapi.mappers.ArtistaMapper;
+import com.example.processoseletivoapi.models.Album;
 import com.example.processoseletivoapi.models.Artista;
 import com.example.processoseletivoapi.requests.ArtistaRequest;
 import com.example.processoseletivoapi.responses.ArtistaResponse;
+import com.example.processoseletivoapi.services.AlbumService;
 import com.example.processoseletivoapi.services.ArtistaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Tag(name = "ARTISTA")
 @RestController
@@ -25,10 +28,12 @@ import java.util.List;
 public class ArtistaController {
 
     private final ArtistaService service;
+    private final AlbumService albumService;
     private final ArtistaMapper mapper;
 
-    public ArtistaController(ArtistaService service, ArtistaMapper mapper) {
+    public ArtistaController(ArtistaService service, AlbumService albumService, ArtistaMapper mapper) {
         this.service = service;
+        this.albumService = albumService;
         this.mapper = mapper;
     }
 
@@ -52,8 +57,9 @@ public class ArtistaController {
             )
             @RequestBody ArtistaRequest request
     ) {
-        Artista model = service.create(mapper.requestToModel(request));
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model));
+        Artista model = service.create(mapper.requestToModel(request), request.listaAlbumId());
+        Set<Album> albuns = albumService.findByArtistaId(model.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model, albuns));
     }
 
     @Operation(
@@ -79,8 +85,9 @@ public class ArtistaController {
             @Parameter(description = "ID do artista", required = true)
             @PathVariable Long id
     ) {
-        Artista model = service.update(mapper.requestToModel(request), id);
-        return ResponseEntity.ok(mapper.modelToResponse(model));
+        Artista model = service.update(mapper.requestToModel(request), request.listaAlbumId(), id);
+        Set<Album> albuns = albumService.findByArtistaId(id);
+        return ResponseEntity.ok(mapper.modelToResponse(model, albuns));
     }
 
     @Operation(
@@ -136,7 +143,8 @@ public class ArtistaController {
             @PathVariable Long id
     ) {
         Artista model = service.findById(id);
-        return ResponseEntity.ok(mapper.modelToResponse(model));
+        Set<Album> albuns = albumService.findByArtistaId(id);
+        return ResponseEntity.ok(mapper.modelToResponse(model, albuns));
     }
 
 }

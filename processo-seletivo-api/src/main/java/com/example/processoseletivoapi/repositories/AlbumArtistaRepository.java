@@ -15,6 +15,11 @@ public interface AlbumArtistaRepository extends JpaRepository<AlbumArtista, Long
             "WHERE aa.id.albumId = :albumId ")
     List<AlbumArtista> findByAlbumId(Long albumId);
 
+    @Query("SELECT aa " +
+            "FROM AlbumArtista aa " +
+            "WHERE aa.id.artistaId = :artistaId ")
+    List<AlbumArtista> findByArtistaId(Long artistaId);
+
     @Modifying
     @Query("DELETE " +
             "FROM AlbumArtista aa " +

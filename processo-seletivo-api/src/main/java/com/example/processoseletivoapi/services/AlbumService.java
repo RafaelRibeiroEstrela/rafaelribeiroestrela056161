@@ -27,34 +27,14 @@ public class AlbumService {
         this.albumImagemRepository = albumImagemRepository;
     }
 
-    public Album create(Album model, Set<Long> artistaIdList) {
+    public Album create(Album model) {
         model = repository.save(model);
-        if (artistaIdList != null && !artistaIdList.isEmpty()) {
-            Set<AlbumArtista> albumArtistas = new HashSet<>();
-            for (Long artistaId : artistaIdList) {
-                albumArtistas.add(new AlbumArtista(artistaId, model.getId()));
-            }
-            albumArtistaRepository.saveAll(albumArtistas);
-        }
         return model;
     }
 
-    public Album update(Album model, long id, Set<Long> artistaIdList) {
+    public Album update(Album model, long id) {
         model.setId(id);
         model = repository.save(model);
-        if (artistaIdList == null || artistaIdList.isEmpty()) {
-            albumArtistaRepository.deleteByAlbumId(id);
-        } else {
-            List<AlbumArtista> albumArtistaList = albumArtistaRepository.findByAlbumId(id);
-            albumArtistaList.removeIf(obj -> !artistaIdList.contains(obj.getId().getArtistaId()));
-            for (Long artistaId : artistaIdList) {
-                AlbumArtista albumArtista = new AlbumArtista(artistaId, id);
-                if (!albumArtistaList.contains(albumArtista)) {
-                    albumArtistaList.add(albumArtista);
-                }
-            }
-            albumArtistaRepository.saveAll(albumArtistaList);
-        }
         return model;
     }
 
@@ -71,5 +51,11 @@ public class AlbumService {
 
     public Album findById(long id) {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum album encontrado"));
+    }
+
+    public Set<Album> findByArtistaId(long artistaId) {
+        List<AlbumArtista> listaAlbumArtista = albumArtistaRepository.findByArtistaId(artistaId);
+        List<Long> listaAlbumId = listaAlbumArtista.stream().map(obj -> obj.getId().getAlbumId()).toList();
+        return new HashSet<>(repository.findAllById(listaAlbumId));
     }
 }

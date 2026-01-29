@@ -1,13 +1,10 @@
 package com.example.processoseletivoapi.controllers;
 
 import com.example.processoseletivoapi.mappers.AlbumMapper;
-import com.example.processoseletivoapi.mappers.ArtistaMapper;
 import com.example.processoseletivoapi.models.Album;
-import com.example.processoseletivoapi.models.Artista;
 import com.example.processoseletivoapi.requests.AlbumRequest;
 import com.example.processoseletivoapi.responses.AlbumResponse;
 import com.example.processoseletivoapi.services.AlbumService;
-import com.example.processoseletivoapi.services.ArtistaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "ALBUM")
 @RestController
@@ -34,19 +30,14 @@ import java.util.stream.Collectors;
 public class AlbumController {
 
     private final AlbumService service;
-    private final ArtistaService artistaService;
     private final AlbumMapper mapper;
-    private final ArtistaMapper artistaMapper;
     private final AlbumWebSoket webSoket;
 
-    public AlbumController(AlbumService service, ArtistaService artistaService, AlbumMapper mapper, ArtistaMapper artistaMapper, AlbumWebSoket webSoket) {
+    public AlbumController(AlbumService service, AlbumMapper mapper, AlbumWebSoket webSoket) {
         this.service = service;
-        this.artistaService = artistaService;
         this.mapper = mapper;
-        this.artistaMapper = artistaMapper;
         this.webSoket = webSoket;
     }
-
 
     @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +58,7 @@ public class AlbumController {
             )
             @RequestBody AlbumRequest request
     ) {
-        Album model = service.create(mapper.requestToModel(request), request.artistaIdList());
+        Album model = service.create(mapper.requestToModel(request));
         webSoket.publish(model);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.modelToResponse(model));
     }
@@ -94,7 +85,7 @@ public class AlbumController {
             @Parameter(description = "ID do álbum", required = true)
             @PathVariable Long id
     ) {
-        Album model = service.update(mapper.requestToModel(request), id, request.artistaIdList());
+        Album model = service.update(mapper.requestToModel(request), id);
         return ResponseEntity.ok().body(mapper.modelToResponse(model));
     }
 
@@ -167,16 +158,8 @@ public class AlbumController {
             @PathVariable Long id
     ) {
         Album model = service.findById(id);
-        List<Artista> artistas = artistaService.findByAlbumId(id);
 
-        return ResponseEntity.ok().body(
-                mapper.modelToResponse(
-                        model,
-                        artistas.stream()
-                                .map(artistaMapper::modelToResponse)
-                                .collect(Collectors.toSet())
-                )
-        );
+        return ResponseEntity.ok().body(mapper.modelToResponse(model));
     }
 
     /**
