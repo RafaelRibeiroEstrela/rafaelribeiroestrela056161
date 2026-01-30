@@ -3,6 +3,7 @@ package com.example.processoseletivoapi.controllers;
 import com.example.processoseletivoapi.mappers.ArtistaMapper;
 import com.example.processoseletivoapi.models.Album;
 import com.example.processoseletivoapi.models.Artista;
+import com.example.processoseletivoapi.models.projections.ArtistaProjection;
 import com.example.processoseletivoapi.requests.ArtistaRequest;
 import com.example.processoseletivoapi.responses.AlbumResponse;
 import com.example.processoseletivoapi.responses.ArtistaResponse;
@@ -148,7 +149,7 @@ public class ArtistaController {
             @RequestParam(defaultValue = "ASC", required = false) Sort.Direction ordenacao
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(ordenacao, "nome"));
-        Page<Artista> models = service.find(nomeArtista, pageable);
+        Page<ArtistaProjection> models = service.find(nomeArtista, pageable);
         return ResponseEntity.ok().body(models.map(mapper::modelToResponse));
     }
 

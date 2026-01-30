@@ -158,7 +158,6 @@ public class AlbumController {
             @PathVariable Long id
     ) {
         Album model = service.findById(id);
-
         return ResponseEntity.ok().body(mapper.modelToResponse(model));
     }
 
