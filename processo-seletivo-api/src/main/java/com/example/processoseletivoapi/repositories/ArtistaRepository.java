@@ -9,8 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ArtistaRepository extends JpaRepository<Artista, Long> {
 
-    @Query("SELECT a.id, a.nome, (SELECT COUNT(aa.id.albumId) FROM AlbumArtista aa WHERE aa.id.artistaId = a.id) as quantidadeDeAlbuns " +
-            "FROM Artista a " +
-            "WHERE (:nomeArtista IS NULL OR UPPER(a.nome) LIKE UPPER(:nomeArtista)) ")
+    @Query(value = """
+    select a.id as id, a.nome as nome, (select count(aa.id_album) from tb_albuns_artistas aa where aa.id_artista = a.id) as quatidadeDeAlbuns
+    from tb_artistas a
+    where :nomeArtista is null or a.nome ilike :nomeArtista
+""", nativeQuery = true)
     Page<ArtistaProjection> find(String nomeArtista, Pageable pageable);
 }
