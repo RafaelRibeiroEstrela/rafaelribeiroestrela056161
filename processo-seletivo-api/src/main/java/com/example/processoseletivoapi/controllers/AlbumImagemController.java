@@ -2,6 +2,7 @@ package com.example.processoseletivoapi.controllers;
 
 import com.example.processoseletivoapi.mappers.AlbumImagemMapper;
 import com.example.processoseletivoapi.models.AlbumImagem;
+import com.example.processoseletivoapi.requests.AlbumImagemRequest;
 import com.example.processoseletivoapi.responses.AlbumImagemResponse;
 import com.example.processoseletivoapi.services.AlbumImagemService;
 import com.example.processoseletivoapi.utils.AlbumImagemUtil;
@@ -72,6 +73,38 @@ public class AlbumImagemController {
     }
 
     @Operation(
+            summary = "Upload de imagens do álbum",
+            description = "Recebe uma ou mais imagens (base64) e associa ao álbum informado."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Imagens enviadas com sucesso"
+            ),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content),
+            @ApiResponse(responseCode = "413", description = "Arquivo(s) muito grande(s)", content = @Content)
+    })
+    @Transactional
+    @PutMapping("/upload/base64/{albumId}")
+    public ResponseEntity<List<AlbumImagemResponse>> uploadBase64(
+            @Parameter(
+                    description = "Lista de arquivos (imagens) para upload",
+                    required = true
+            )
+            @RequestParam("files") List<AlbumImagemRequest> files,
+
+            @Parameter(description = "ID do álbum", required = true)
+            @PathVariable Long albumId) {
+
+        List<AlbumImagem> models = files.stream()
+                .map(obj -> service.upload(mapper.requestToModel(obj, albumId)))
+                .toList();
+
+        return ResponseEntity.ok(models.stream().map(mapper::modelToResponse).toList());
+    }
+
+    @Operation(
             summary = "Download das imagens do álbum (ZIP)",
             description = "Baixa um arquivo .zip com todas as imagens associadas ao álbum."
     )
@@ -94,6 +127,28 @@ public class AlbumImagemController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"capas-album.zip\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(new InputStreamResource(new ByteArrayInputStream(util.compactFilesToZip(models))));
+    }
+
+    @Operation(
+            summary = "Recuperar imagens por base64",
+            description = "Recuperar um array de base64 com todas as imagens associadas ao álbum."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Gerado com sucesso"
+            ),
+            @ApiResponse(responseCode = "404", description = "Álbum/imagens não encontrados", content = @Content)
+    })
+    @Transactional(readOnly = true)
+    @GetMapping("/download/base64/{albumId}")
+    public ResponseEntity<List<AlbumImagemResponse>> downloadBase64(
+            @Parameter(description = "ID do álbum", required = true, in = ParameterIn.PATH)
+            @PathVariable Long albumId) {
+
+        List<AlbumImagem> models = service.downloadByAlbumId(albumId);
+
+        return ResponseEntity.ok().body(models.stream().map(mapper::modelToResponse).toList());
     }
 
     @Operation(

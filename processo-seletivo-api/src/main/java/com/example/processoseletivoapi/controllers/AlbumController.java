@@ -2,8 +2,10 @@ package com.example.processoseletivoapi.controllers;
 
 import com.example.processoseletivoapi.mappers.AlbumMapper;
 import com.example.processoseletivoapi.models.Album;
+import com.example.processoseletivoapi.models.AlbumImagem;
 import com.example.processoseletivoapi.requests.AlbumRequest;
 import com.example.processoseletivoapi.responses.AlbumResponse;
+import com.example.processoseletivoapi.services.AlbumImagemService;
 import com.example.processoseletivoapi.services.AlbumService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,11 +34,13 @@ public class AlbumController {
     private final AlbumService service;
     private final AlbumMapper mapper;
     private final AlbumWebSoket webSoket;
+    private final AlbumImagemService albumImagemService;
 
-    public AlbumController(AlbumService service, AlbumMapper mapper, AlbumWebSoket webSoket) {
+    public AlbumController(AlbumService service, AlbumMapper mapper, AlbumWebSoket webSoket, AlbumImagemService albumImagemService) {
         this.service = service;
         this.mapper = mapper;
         this.webSoket = webSoket;
+        this.albumImagemService = albumImagemService;
     }
 
     @Transactional
@@ -158,7 +162,8 @@ public class AlbumController {
             @PathVariable Long id
     ) {
         Album model = service.findById(id);
-        return ResponseEntity.ok().body(mapper.modelToResponse(model));
+        List<AlbumImagem> imagens = albumImagemService.downloadByAlbumId(id);
+        return ResponseEntity.ok().body(mapper.modelToResponse(model, imagens));
     }
 
     /**
