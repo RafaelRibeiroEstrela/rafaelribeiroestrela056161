@@ -4,7 +4,7 @@ export interface AlbumImagem {
   fileName: string;
   fileContentType: string;
   fileHash: string;
-  fileContent: string;
+  fileContent?: string;
   storageKey: string;
   linkPreAssinado: string;
 }

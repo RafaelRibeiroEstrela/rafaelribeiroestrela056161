@@ -27,6 +27,8 @@ public class AlbumImagem {
     public AlbumImagem() {
     }
 
+
+
     public AlbumImagem(Long albumId, String fileName, String fileContentType, byte[] content) {
         this.setAlbumId(albumId);
         this.setFileName(fileName);
