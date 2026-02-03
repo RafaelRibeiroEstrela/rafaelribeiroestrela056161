@@ -5,7 +5,6 @@ import com.example.processoseletivoapi.models.Album;
 import com.example.processoseletivoapi.models.Artista;
 import com.example.processoseletivoapi.models.projections.ArtistaProjection;
 import com.example.processoseletivoapi.requests.ArtistaRequest;
-import com.example.processoseletivoapi.responses.AlbumResponse;
 import com.example.processoseletivoapi.responses.ArtistaResponse;
 import com.example.processoseletivoapi.services.AlbumService;
 import com.example.processoseletivoapi.services.ArtistaService;
@@ -26,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Tag(name = "ARTISTA")

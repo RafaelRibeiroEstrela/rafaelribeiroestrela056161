@@ -9,23 +9,23 @@ import java.time.LocalDateTime;
 public class Token {
 
     @Id
-    private String token;
+    private String id;
     private LocalDateTime deletedAt;
 
     public Token() {
     }
 
-    public Token(String token, LocalDateTime deletedAt) {
-        this.token = token;
+    public Token(String id, LocalDateTime deletedAt) {
+        this.id = id;
         this.deletedAt = deletedAt;
     }
 
-    public String getToken() {
-        return token;
+    public String getId() {
+        return id;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public LocalDateTime getDeletedAt() {
