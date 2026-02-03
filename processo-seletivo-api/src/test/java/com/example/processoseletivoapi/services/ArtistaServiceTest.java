@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -103,10 +105,15 @@ class ArtistaServiceTest {
         Assertions.assertAll(() -> service.delete(id));
     }
 
+
     @Test
     void testBuscarArtistaComSucesso() {
-        Assertions.assertAll(() -> service.findAll());
+        String nomeArtista = "Zé xicará";
+        Pageable pageable = PageRequest.of(0, 10);
+        Assertions.assertAll(() -> service.find(nomeArtista, pageable));
     }
+
+
 
     @Test
     void testBuscarArtistaPorIddComSucesso() {

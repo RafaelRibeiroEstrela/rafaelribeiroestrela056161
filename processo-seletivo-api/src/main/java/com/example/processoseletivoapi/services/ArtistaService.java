@@ -4,6 +4,7 @@ import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.models.AlbumArtista;
 import com.example.processoseletivoapi.models.Artista;
+import com.example.processoseletivoapi.models.projections.ArtistaProjection;
 import com.example.processoseletivoapi.repositories.AlbumArtistaRepository;
 import com.example.processoseletivoapi.repositories.AlbumRepository;
 import com.example.processoseletivoapi.repositories.ArtistaRepository;
@@ -70,7 +71,7 @@ public class ArtistaService {
         repository.deleteById(id);
     }
 
-    public Page<Artista> find(String nomeArtista, Pageable pageable) {
+    public Page<ArtistaProjection> find(String nomeArtista, Pageable pageable) {
         nomeArtista = nomeArtista == null || nomeArtista.trim().isEmpty() ? null : "%" + nomeArtista + "%";
         return repository.find(nomeArtista, pageable);
     }
