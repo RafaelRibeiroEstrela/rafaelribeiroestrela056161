@@ -11,7 +11,6 @@ import com.example.processoseletivoapi.services.RoleService;
 import com.example.processoseletivoapi.services.TokenService;
 import com.example.processoseletivoapi.services.UserService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
