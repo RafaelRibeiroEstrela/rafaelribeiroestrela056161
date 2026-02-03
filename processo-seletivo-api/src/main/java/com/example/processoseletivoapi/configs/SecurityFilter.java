@@ -1,6 +1,9 @@
 package com.example.processoseletivoapi.configs;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.processoseletivoapi.exceptions.AccessLimitException;
 import com.example.processoseletivoapi.exceptions.AuthorizationException;
+import com.example.processoseletivoapi.exceptions.TokenException;
 import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.User;
 import com.example.processoseletivoapi.services.RateLimitService;
@@ -8,27 +11,31 @@ import com.example.processoseletivoapi.services.RoleService;
 import com.example.processoseletivoapi.services.TokenService;
 import com.example.processoseletivoapi.services.UserService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
+import static com.example.processoseletivoapi.configs.SecurityConfig.PUBLIC_PATHS;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityFilter.class);
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenService tokenService;
@@ -36,38 +43,47 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final RoleService roleService;
     private final RateLimitService rateLimitService;
 
+    private final HandlerExceptionResolver resolver;
+
+
+    private final RequestMatcher publicEndpoints =
+            new OrRequestMatcher(
+                    Arrays.stream(PUBLIC_PATHS)
+                            .map(p -> PathPatternRequestMatcher.withDefaults().matcher(p))
+                            .toArray(RequestMatcher[]::new)
+            );
+
     @Value("${environment}")
     private String environment;
 
-    public SecurityFilter(TokenService tokenService, UserService userService, RoleService roleService, RateLimitService rateLimitService) {
+    public SecurityFilter(TokenService tokenService, UserService userService, RoleService roleService, RateLimitService rateLimitService, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
         this.tokenService = tokenService;
         this.userService = userService;
         this.roleService = roleService;
         this.rateLimitService = rateLimitService;
+        this.resolver = resolver;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        if (environment.equals("dev")) {
+            return true;
+        }
+        return publicEndpoints.matches(request);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-
-        if (environment.equals("dev")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+                                    FilterChain filterChain) throws IOException {
 
         try {
+
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 String token = recoverToken(request);
 
-                if (token == null) {
-                    throw new AuthorizationException("Invalid token");
-                }
-
-                if (!tokenService.isValidToken(token)) {
-                    throw new AuthorizationException("Invalid token");
-                }
+                validateToken(token);
 
                 String username = tokenService.extractUsername(token);
 
@@ -76,8 +92,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 rateLimitService.registerAccess(username);
 
                 if (!rateLimitService.isAccessAllowed(username)) {
-                    LOGGER.error("Limite de acessos atingido");
-                    throw new AuthorizationException("Limite de acessos atingido");
+                    throw new AccessLimitException("Limite de acessos atingido");
                 }
 
                 Collection<? extends GrantedAuthority> roles = buildGrantedAuthority(roleService.findAllByIds(user.getRolesInHashSet()));
@@ -96,9 +111,24 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-        } catch (Exception ex) {
+        } catch (AccessLimitException | AuthorizationException e) {
             SecurityContextHolder.clearContext();
-            filterChain.doFilter(request, response);
+            resolver.resolveException(request, response, null, e);
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            resolver.resolveException(request, response, null, e);
+        }
+
+    }
+
+    private void validateToken(String token) {
+        if (token == null) {
+            throw new AuthorizationException("Invalid token");
+        }
+        try {
+            tokenService.validateToken(token);
+        } catch (JWTVerificationException | TokenException e) {
+            throw new AuthorizationException(e.getMessage());
         }
     }
 

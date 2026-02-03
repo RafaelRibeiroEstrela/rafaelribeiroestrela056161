@@ -21,7 +21,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] PUBLIC_PATHS = {
+    protected static final String[] PUBLIC_PATHS = {
             "/v3/api-docs/swagger-config",
             "/swagger-ui.html",
             "/v1/auth/**",

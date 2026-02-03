@@ -17,15 +17,21 @@ A solução foi projetada com foco em **qualidade de código**, **boas práticas
 
 - **Java 21**
 - **Spring Boot**
-  - Spring Web
-  - Spring Data JPA
-  - Spring Security
+  - spring web
+  - spring data jpa
+  - spring data redis
+  - spring security
+  - spring actuator
+  - spring websocket
+  - spring cloud openfeign
 - **PostgreSQL** – Banco de dados relacional
-- **Redis** – Cache e controle de rate limit
+- **Redis** – Gerenciamento e controle de tokens e rate limit
 - **MinIO** – Armazenamento de arquivos (compatível com Amazon S3)
 - **Flyway** – Versionamento e migração de banco de dados
 - **Docker & Docker Compose** – Orquestração do ambiente
 - **Swagger / OpenAPI** – Documentação dos endpoints
+- **SonarQube for IDE** – Ferramenta de análise de código para padrões de qualidade e segurança
+- **Apache Tika** – Ferramenta que detecta e extrai metadados e texto de mais de váriados tipos de arquivos
 
 A aplicação segue o padrão arquitetural **MVC em camadas**, com aplicação de **SOLID**, **Clean Code** e **padrões de projeto**, visando clareza, baixo acoplamento e fácil evolução.
 
