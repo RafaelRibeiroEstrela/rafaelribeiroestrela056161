@@ -23,9 +23,9 @@ public class RegionalService {
         this.mapper = mapper;
     }
 
-    public synchronized void sync() {
+    public void sync() {
         List<Regional> regionaisApi = client.findAll().stream().map(mapper::responseToModel).toList();
-        List<Regional> regionaisDb = repository.findAll();
+        List<Regional> regionaisDb = repository.findAllLocked();
         if (regionaisDb.isEmpty()) {
             regionaisApi.forEach(obj -> obj.setAtivo(true));
             repository.saveAll(regionaisApi);
