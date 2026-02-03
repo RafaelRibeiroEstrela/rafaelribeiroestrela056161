@@ -1,6 +1,5 @@
 package com.example.processoseletivoapi.services;
 
-import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.models.AlbumArtista;
 import com.example.processoseletivoapi.models.Artista;
