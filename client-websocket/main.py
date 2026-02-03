@@ -38,7 +38,7 @@ def main():
     ws = websocket.create_connection(
         WS_URL,
         subprotocols=["v12.stomp", "v11.stomp", "v10.stomp"],
-        timeout=30
+        timeout=3600
     )
 
     # CONNECT
