@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.processoseletivoapi.exceptions.TokenException;
 import com.example.processoseletivoapi.models.Role;
@@ -83,20 +84,16 @@ public class TokenService {
         }
     }
 
-    public boolean isValidToken(String token) {
+    public void validateToken(String token) throws TokenException, JWTVerificationException {
         if (tokenRepository.findById(token).isPresent()) {
-            return false;
+            throw new TokenException("Token inutilizado");
         }
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(issuer)
-                    .build();
-            verifier.verify(token);
-            return true;
-        } catch (JWTVerificationException e) {
-            return false;
-        }
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer(issuer)
+                .build();
+        verifier.verify(token);
+
     }
 
     public void delete(String token) {
@@ -104,8 +101,10 @@ public class TokenService {
     }
 
     public String refreshToken(String token) {
-        if (!isValidToken(token)) {
-            throw new TokenException("Token inválido");
+        try {
+            validateToken(token);
+        } catch (JWTVerificationException e) {
+            throw new TokenException(e.getMessage());
         }
         delete(token);
         String username = extractUsername(token);

@@ -1,9 +1,6 @@
 package com.example.processoseletivoapi.handlers;
 
-import com.example.processoseletivoapi.exceptions.AuthorizationException;
-import com.example.processoseletivoapi.exceptions.BusinessException;
-import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
-import com.example.processoseletivoapi.exceptions.StorageException;
+import com.example.processoseletivoapi.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,6 +85,19 @@ public class ControllerExceptionHandler {
         ErrorResponse standardError = new ErrorResponse(
                 status.value(),
                 "AuthorizationException",
+                e.getMessage(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(AccessLimitException.class)
+    public ResponseEntity<ErrorResponse> accessLimitException(AccessLimitException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.TOO_MANY_REQUESTS;
+        ErrorResponse standardError = new ErrorResponse(
+                status.value(),
+                "AccessLimitException",
                 e.getMessage(),
                 LocalDateTime.now(),
                 request.getRequestURI()
