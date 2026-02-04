@@ -2,7 +2,9 @@ package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.StorageException;
+import com.example.processoseletivoapi.exceptions.TokenException;
 import com.example.processoseletivoapi.models.AlbumImagem;
+import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.repositories.AlbumImagemRepository;
 import com.example.processoseletivoapi.storages.StorageClient;
 import org.apache.tika.Tika;
@@ -62,8 +64,7 @@ class AlbumImagemServiceTest {
     void testDownloadLinkPreAssinadoComSucesso() {
         String token = "token";
         String key = "key";
-        Mockito.when(tokenService.isTokenPreAssinadoValido(token)).thenReturn(true);
-        Mockito.when(tokenService.extractUsername(token)).thenReturn(key);
+        Mockito.when(tokenService.extractSubject(token)).thenReturn(key);
         Long albumId = 1L;
         String fileName = "capa-album.png";
         String contentType = "image/png";
@@ -77,7 +78,9 @@ class AlbumImagemServiceTest {
     @Test
     void testDownloadLinkPreAssinadoComFalhaTokenExpirado() {
         String token = "token";
-        Assertions.assertThrows(StorageException.class, () -> service.downloadLinkPreAssinado(token));
+        TokenTypeEnum tokenType = TokenTypeEnum.TOKEN_PRE_ASSINADO;
+        Mockito.doThrow(TokenException.class).when(tokenService).validateToken(token, tokenType);
+        Assertions.assertThrows(TokenException.class, () -> service.downloadLinkPreAssinado(token));
     }
 
     @Test

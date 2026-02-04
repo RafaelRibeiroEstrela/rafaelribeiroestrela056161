@@ -37,7 +37,7 @@ class RegionalServiceTest {
         Regional model = new Regional(null, 1L, "RegionalTeste", null);
         List<RegionalResponse> reginais = List.of(response);
         Mockito.when(client.findAll()).thenReturn(reginais);
-        Mockito.when(repository.findAll()).thenReturn(List.of());
+        Mockito.when(repository.findAllLocked()).thenReturn(List.of());
         Mockito.when(mapper.responseToModel(response)).thenReturn(model);
         Assertions.assertAll(() -> service.sync());
     }
@@ -49,7 +49,7 @@ class RegionalServiceTest {
         Regional modelSaved = new Regional(1L, 1L, "RegionalTesteX", true);
         List<RegionalResponse> reginais = List.of(response);
         Mockito.when(client.findAll()).thenReturn(reginais);
-        Mockito.when(repository.findAll()).thenReturn(List.of(modelSaved));
+        Mockito.when(repository.findAllLocked()).thenReturn(List.of(modelSaved));
         Mockito.when(mapper.responseToModel(response)).thenReturn(model);
         Assertions.assertAll(() -> service.sync());
     }

@@ -1,6 +1,7 @@
 package com.example.processoseletivoapi.controllers;
 
 import com.example.processoseletivoapi.dtos.TokenDTO;
+import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.requests.LoginRequest;
 import com.example.processoseletivoapi.responses.TokenResponse;
 import com.example.processoseletivoapi.services.AuthenticationService;
@@ -89,7 +90,7 @@ public class AuthenticationController {
     @PutMapping("/refresh-token")
     public ResponseEntity<TokenResponse> refreshToken(
             @Parameter(
-                    description = "Token"
+                    description = "RefreshToken"
             )
             @RequestHeader String refreshToken
     ) {

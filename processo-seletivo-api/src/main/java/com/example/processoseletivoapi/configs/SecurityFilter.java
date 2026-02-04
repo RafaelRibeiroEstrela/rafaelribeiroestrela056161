@@ -1,11 +1,10 @@
 package com.example.processoseletivoapi.configs;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.processoseletivoapi.exceptions.AccessLimitException;
 import com.example.processoseletivoapi.exceptions.AuthorizationException;
-import com.example.processoseletivoapi.exceptions.TokenException;
 import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.User;
+import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.services.RateLimitService;
 import com.example.processoseletivoapi.services.RoleService;
 import com.example.processoseletivoapi.services.TokenService;
@@ -83,9 +82,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 String token = recoverToken(request);
 
-                validateToken(token);
+                tokenService.validateToken(token, TokenTypeEnum.TOKEN);
 
-                String username = tokenService.extractUsername(token);
+                String username = tokenService.extractSubject(token);
 
                 User user = userService.findByUsername(username);
 
@@ -119,17 +118,6 @@ public class SecurityFilter extends OncePerRequestFilter {
             resolver.resolveException(request, response, null, e);
         }
 
-    }
-
-    private void validateToken(String token) {
-        if (token == null) {
-            throw new AuthorizationException("Invalid token");
-        }
-        try {
-            tokenService.validateToken(token);
-        } catch (JWTVerificationException | TokenException e) {
-            throw new AuthorizationException(e.getMessage());
-        }
     }
 
     private String recoverToken(HttpServletRequest request) {
