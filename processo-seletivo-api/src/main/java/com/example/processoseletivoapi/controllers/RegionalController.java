@@ -10,9 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,7 +42,8 @@ public class RegionalController {
                     description = "Erro interno ao executar sincronização"
             )
     })
-    @GetMapping("/synchronize")
+    @Transactional
+    @PutMapping("/synchronize")
     public ResponseEntity<String> sync() {
         service.sync();
         return ResponseEntity.ok().body("Base de dados sincronizada");
@@ -64,6 +64,7 @@ public class RegionalController {
                     content = @Content
             )
     })
+    @Transactional(readOnly = true)
     @GetMapping("/all")
     public ResponseEntity<List<RegionalResponse>> findAll() {
         List<Regional> models = service.findAll();

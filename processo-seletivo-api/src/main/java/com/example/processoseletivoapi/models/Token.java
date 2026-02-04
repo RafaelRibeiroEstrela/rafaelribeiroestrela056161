@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
-@RedisHash
+@RedisHash(timeToLive = 300L) //5 minutos
 public class Token {
 
     @Id

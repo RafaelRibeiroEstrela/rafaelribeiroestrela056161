@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -45,6 +46,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "409", description = "Usuário já existe", content = @Content)
     })
+    @Transactional
     @PostMapping
     public ResponseEntity<UserResponse> create(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -66,6 +68,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos", content = @Content),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
+    @Transactional
     @PutMapping("/update-roles")
     public ResponseEntity<Void> updateRoles(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -90,6 +93,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Senha antiga inválida", content = @Content),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
+    @Transactional
     @PutMapping("/update-password")
     public ResponseEntity<Void> updatePassword(
             @Parameter(description = "Senha atual", required = true)
@@ -111,6 +115,7 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "Usuário removido com sucesso"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID do usuário", required = true)
@@ -128,6 +133,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
+    @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<UserResponse> findByUsername(
             @Parameter(description = "Username do usuário", required = true)
