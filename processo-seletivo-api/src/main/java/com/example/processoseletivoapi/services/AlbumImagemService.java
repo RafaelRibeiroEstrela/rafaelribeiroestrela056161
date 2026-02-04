@@ -2,8 +2,8 @@ package com.example.processoseletivoapi.services;
 
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
-import com.example.processoseletivoapi.exceptions.StorageException;
 import com.example.processoseletivoapi.models.AlbumImagem;
+import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.repositories.AlbumImagemRepository;
 import com.example.processoseletivoapi.storages.StorageClient;
 import org.apache.tika.Tika;
@@ -48,10 +48,8 @@ public class AlbumImagemService {
     }
 
     public AlbumImagem downloadLinkPreAssinado(String token) {
-        if (!tokenService.isTokenPreAssinadoValido(token)) {
-            throw new StorageException("Tempo expirado para recuperar o arquivo");
-        }
-        String key = tokenService.extractUsername(token);
+        tokenService.validateToken(token, TokenTypeEnum.TOKEN_PRE_ASSINADO);
+        String key = tokenService.extractSubject(token);
         AlbumImagem model = repository.findByStorageKey(key).orElseThrow(() -> new ResourceNotFoundException("Nenhum arquivo encontrado"));
         byte[] content = storageClient.download(key);
         model.setContent(content);
@@ -102,7 +100,7 @@ public class AlbumImagemService {
     }
 
     private String generateUrl(String key) {
-        String token = tokenService.generateTokenLinkPreAssinado(key);
+        String token = tokenService.generate(key, TokenTypeEnum.TOKEN_PRE_ASSINADO);
         return "http://localhost:" + applicationPort + "/minio/miniobucket/" + token;
     }
 }

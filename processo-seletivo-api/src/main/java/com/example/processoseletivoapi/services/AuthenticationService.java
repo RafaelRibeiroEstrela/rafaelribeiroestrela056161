@@ -1,7 +1,9 @@
 package com.example.processoseletivoapi.services;
 
+import com.example.processoseletivoapi.dtos.TokenDTO;
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.models.User;
+import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,16 +22,19 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String login(String username, String password) {
+    public TokenDTO login(String username, String password) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new BusinessException("username or password incorrect"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BusinessException("username or password incorrect");
         }
-        return tokenService.generate(username);
+        String token = tokenService.generate(username, TokenTypeEnum.TOKEN);
+        String refreshToken = tokenService.generate(username, TokenTypeEnum.REFRESH_TOKEN);
+        return new TokenDTO(token, refreshToken);
     }
 
-    public void logout(String token) {
+    public void logout(String token, String refreshToken) {
         tokenService.delete(token);
+        tokenService.delete(refreshToken);
         SecurityContextHolder.clearContext();
     }
 }

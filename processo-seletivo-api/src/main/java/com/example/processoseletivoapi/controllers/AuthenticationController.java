@@ -1,6 +1,9 @@
 package com.example.processoseletivoapi.controllers;
 
+import com.example.processoseletivoapi.dtos.TokenDTO;
+import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.requests.LoginRequest;
+import com.example.processoseletivoapi.responses.TokenResponse;
 import com.example.processoseletivoapi.services.AuthenticationService;
 import com.example.processoseletivoapi.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +42,7 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas", content = @Content)
     @PostMapping("/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<TokenResponse> login(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Credenciais de acesso",
                     required = true,
@@ -53,8 +56,8 @@ public class AuthenticationController {
             )
             @RequestBody LoginRequest request
     ) {
-        String token = service.login(request.username(), request.password());
-        return ResponseEntity.status(HttpStatus.CREATED).body(token);
+        TokenDTO tokenDTO = service.login(request.username(), request.password());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(tokenDTO.token(), tokenDTO.refreshToken()));
     }
 
     @Operation(
@@ -69,9 +72,13 @@ public class AuthenticationController {
             @Parameter(
                     description = "Token"
             )
-            @RequestHeader String token
+            @RequestHeader String token,
+            @Parameter(
+                    description = "RefreshToken"
+            )
+            @RequestHeader String refreshToken
     ) {
-        service.logout(token);
+        service.logout(token, refreshToken);
         return ResponseEntity.ok().build();
     }
 
@@ -81,13 +88,13 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "200", description = "Token atualizado com sucesso", content = @Content)
     @ApiResponse(responseCode = "401", description = "Token ausente ou inválido", content = @Content)
     @PutMapping("/refresh-token")
-    public ResponseEntity<String> refreshToken(
+    public ResponseEntity<TokenResponse> refreshToken(
             @Parameter(
-                    description = "Token"
+                    description = "RefreshToken"
             )
-            @RequestHeader String token
+            @RequestHeader String refreshToken
     ) {
-        String newToken = tokenService.refreshToken(token);
-        return ResponseEntity.ok().body(newToken);
+        TokenDTO tokenDTO = tokenService.refreshToken(refreshToken);
+        return ResponseEntity.ok().body(new TokenResponse(tokenDTO.token(), tokenDTO.refreshToken()));
     }
 }
