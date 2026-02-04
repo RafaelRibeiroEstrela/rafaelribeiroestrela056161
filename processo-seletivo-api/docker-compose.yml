@@ -3,7 +3,7 @@ version: "3.8"
 services:
   client-websocket-python:
     build:
-      context: ./client-websocket/
+      context: src/main/resources/client-websocket/
       dockerfile: Dockerfile
     ports:
       - "27015:27015"
