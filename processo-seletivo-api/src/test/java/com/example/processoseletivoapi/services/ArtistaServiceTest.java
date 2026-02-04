@@ -30,17 +30,13 @@ class ArtistaServiceTest {
     private ArtistaRepository repository;
 
     @Mock
-    private AlbumArtistaRepository albumArtistaRepository;
-
-    @Mock
-    private AlbumRepository albumRepository;
+    private AlbumArtistaService albumArtistaService;
 
     @Test
     void testCriarArtistaComSucesso() {
         Assertions.assertAll(() -> new Artista(null, "Artista teste"));
         Artista artista = new Artista(1L, "Artista teste");
         Set<Long> listaAlbumId = Set.of(1L);
-        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(true);
         Mockito.when(repository.save(artista)).thenReturn(artista);
         Assertions.assertEquals(artista, service.create(artista, listaAlbumId));
     }
@@ -52,15 +48,6 @@ class ArtistaServiceTest {
         Set<Long> listaAlbumId = Set.of();
         Mockito.when(repository.save(artista)).thenReturn(artista);
         Assertions.assertEquals(artista, service.create(artista, listaAlbumId));
-    }
-
-    @Test
-    void testCriarArtistaFalhaNenhumAlbumEncontrado() {
-        Artista artista = new Artista(1L, "Artista teste");
-        Set<Long> listaAlbumId = Set.of(1L);
-        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(false);
-        Mockito.when(repository.save(artista)).thenReturn(artista);
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.create(artista, listaAlbumId));
     }
 
     @Test
@@ -76,7 +63,6 @@ class ArtistaServiceTest {
         Artista artista = new Artista(1L, "Artista teste atualizado");
         Set<Long> listaAlbumId = Set.of(1L);
         Mockito.when(repository.save(artista)).thenReturn(artista);
-        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(true);
         Assertions.assertEquals(artista, service.update(artista, listaAlbumId, id));
     }
 
@@ -87,16 +73,6 @@ class ArtistaServiceTest {
         Set<Long> listaAlbumId = Set.of();
         Mockito.when(repository.save(artista)).thenReturn(artista);
         Assertions.assertEquals(artista, service.update(artista, listaAlbumId, id));
-    }
-
-    @Test
-    void testAtualizarArtistaComFalhaNenhumAlbumEncontrado() {
-        long id = 1L;
-        Artista artista = new Artista(1L, "Artista teste atualizado");
-        Set<Long> listaAlbumId = Set.of(1L);
-        Mockito.when(repository.save(artista)).thenReturn(artista);
-        Mockito.when(albumRepository.existsById(Mockito.anyLong())).thenReturn(false);
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.update(artista, listaAlbumId, id));
     }
 
     @Test
