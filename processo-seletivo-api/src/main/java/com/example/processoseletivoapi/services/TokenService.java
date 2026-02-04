@@ -50,7 +50,7 @@ public class TokenService {
 
     public void validateToken(String token, TokenTypeEnum tokenType) {
         if (tokenRepository.findById(token).isPresent()) {
-            throw new TokenException("Token inutilizado");
+            throw new TokenException("Erro de token: O token foi inutilizado");
         }
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -59,10 +59,10 @@ public class TokenService {
                     .build();
             verifier.verify(token);
         } catch (Exception e) {
-            throw new TokenException(e.getMessage());
+            throw new TokenException("Erro de token: " + e.getMessage());
         }
         if (!TokenTypeEnum.valueOf(JWT.decode(token).getClaims().get("tokenType").asString()).equals(tokenType)) {
-            throw new TokenException("Token inválido");
+            throw new TokenException("Erro de token: O tipo de token utilizado é inválido");
         }
     }
 

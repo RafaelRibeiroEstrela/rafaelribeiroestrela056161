@@ -2,13 +2,14 @@ package com.example.processoseletivoapi.repositories;
 
 
 import com.example.processoseletivoapi.models.AlbumArtista;
+import com.example.processoseletivoapi.models.ids.AlbumArtistaId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface AlbumArtistaRepository extends JpaRepository<AlbumArtista, Long> {
+public interface AlbumArtistaRepository extends JpaRepository<AlbumArtista, AlbumArtistaId> {
 
     @Query("SELECT aa " +
             "FROM AlbumArtista aa " +
