@@ -32,6 +32,7 @@ A solução foi projetada com foco em **qualidade de código**, **boas práticas
 - **Swagger / OpenAPI** – Documentação dos endpoints
 - **SonarQube for IDE** – Ferramenta de análise de código para padrões de qualidade e segurança
 - **Apache Tika** – Ferramenta que detecta e extrai metadados e texto de mais de váriados tipos de arquivos
+- **Junit 5** – Ferramenta para testes unitários
 
 A aplicação segue o padrão arquitetural **MVC em camadas**, com aplicação de **SOLID**, **Clean Code** e **padrões de projeto**, visando clareza, baixo acoplamento e fácil evolução.
 

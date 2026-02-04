@@ -1,6 +1,16 @@
 version: "3.8"
 
 services:
+  client-websocket-python:
+    build:
+      context: ./client-websocket/
+      dockerfile: Dockerfile
+    ports:
+      - "27015:27015"
+    networks:
+      - app_network
+    depends_on:
+      - springboot
   springboot:
     build:
       context: .
