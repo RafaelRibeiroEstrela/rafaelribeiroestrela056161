@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.processoseletivoapi.dtos.TokenDTO;
 import com.example.processoseletivoapi.exceptions.TokenException;
 import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.Token;
@@ -27,6 +28,7 @@ public class TokenService {
     @Value("${security.issuer}")
     private String issuer;
     private static final int EXPIRATION_TIME = 300;
+    private static final int EXPIRATION_TIME_REFRESH = 86400;
     private static final int EXPIRATION_TIME_LINK_PRE_ASSINADO = 1800;
 
     private final TokenRepository tokenRepository;
@@ -62,14 +64,22 @@ public class TokenService {
         }
     }
 
-    public String generate(String username) {
+    public String generateToken(String username) {
+        return generate(username, EXPIRATION_TIME);
+    }
+
+    public String generateRefreshToken(String username) {
+        return generate(username, EXPIRATION_TIME_REFRESH);
+    }
+
+    private String generate(String username, int expiration) {
         try {
             User user = userService.findByUsername(username);
             List<String> roles = roleService.findAllByIds(user.getRolesInHashSet()).stream()
                     .map(Role::getAuthority)
                     .toList();
             Instant now = Instant.now();
-            Instant exp = now.plusSeconds(EXPIRATION_TIME);
+            Instant exp = now.plusSeconds(expiration);
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
                     .withSubject(username)
@@ -99,28 +109,22 @@ public class TokenService {
         tokenRepository.save(new Token(token, LocalDateTime.now()));
     }
 
-    public String refreshToken(String token) {
-        try {
-            validateToken(token);
-        } catch (JWTVerificationException e) {
-            throw new TokenException(e.getMessage());
-        }
-        delete(token);
-        String username = extractUsername(token);
-        return generate(username);
-    }
-
-    public List<String> extractRoles(String bearerToken) {
-        String token = cleanBearer(bearerToken);
-        DecodedJWT jwt = JWT.decode(token);
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
-        return roles == null ? Collections.emptyList() : roles;
-    }
-
     public String extractUsername(String bearerToken) {
         String token = cleanBearer(bearerToken);
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getSubject();
+    }
+
+    public TokenDTO refreshToken(String refreshToken) {
+        try {
+            validateToken(refreshToken);
+        } catch (TokenException | JWTVerificationException e ) {
+            throw new TokenException(e.getMessage());
+        }
+        String username = extractUsername(refreshToken);
+        String token = generateToken(username);
+        refreshToken = generateRefreshToken(username);
+        return new TokenDTO(token, refreshToken);
     }
 
     private String cleanBearer(String bearerToken) {
