@@ -22,10 +22,12 @@ import java.util.List;
 public class SecurityConfig {
 
     protected static final String[] PUBLIC_PATHS = {
+            "/v1/auth/**",
+            "/v1/roles/all",
+            "/v1/users",
+            "/minio/miniobucket/**",
             "/v3/api-docs/swagger-config",
             "/swagger-ui.html",
-            "/v1/auth/**",
-            "/minio/miniobucket/**",
             "/actuator/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
@@ -33,6 +35,7 @@ public class SecurityConfig {
             "/webjars/**",
             "/error",
             "/favicon.ico",
+            "/ws",
             "/ws/**"
     };
 
@@ -81,9 +84,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_PATHS).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/v1/roles/all").permitAll()
-                        .requestMatchers(HttpMethod.POST, "v1/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/minio/miniobucket/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(obj -> obj.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
