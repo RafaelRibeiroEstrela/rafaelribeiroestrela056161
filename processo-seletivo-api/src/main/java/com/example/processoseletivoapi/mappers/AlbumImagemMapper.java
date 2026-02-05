@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Component
 public class AlbumImagemMapper {
@@ -22,7 +23,8 @@ public class AlbumImagemMapper {
 
     public AlbumImagemResponse modelToResponse(AlbumImagem model) {
         if (model == null) return null;
-        return new AlbumImagemResponse(model.getId(), model.getAlbumId(), model.getFileName(), model.getFileContentType(), model.getFileHash(), model.getStorageKey(), model.getLinkPreAssinado());
+        String contentBase64 = model.getContent() == null ? null : Base64.getEncoder().encodeToString(model.getContent());
+        return new AlbumImagemResponse(model.getId(), model.getAlbumId(), model.getFileName(), model.getFileContentType(), model.getFileHash(), model.getStorageKey(), model.getLinkPreAssinado(), contentBase64);
     }
 
 
