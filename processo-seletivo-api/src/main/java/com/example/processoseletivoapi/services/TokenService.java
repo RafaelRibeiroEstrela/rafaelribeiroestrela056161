@@ -49,6 +49,9 @@ public class TokenService {
     }
 
     public void validateToken(String token, TokenTypeEnum tokenType) {
+        if (token == null || token.trim().isEmpty()) {
+            throw new TokenException("Erro de token: O token está vazio");
+        }
         if (tokenRepository.findById(token).isPresent()) {
             throw new TokenException("Erro de token: O token foi inutilizado");
         }
