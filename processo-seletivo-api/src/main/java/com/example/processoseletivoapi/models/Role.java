@@ -37,7 +37,7 @@ public class Role {
     }
 
     public void setAuthority(String authority) {
-        if (authority == null) {
+        if (authority == null || authority.trim().isEmpty()) {
             throw new BusinessException("Authority is required");
         }
         if (!authority.startsWith("ROLE_")) {

@@ -97,6 +97,28 @@ public class AlbumImagemController {
     }
 
     @Operation(
+            summary = "Recuperar imagens do álbum (BASE64)",
+            description = "Recuperar arquivos em base64 das imagens associadas ao álbum."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Arquivos recuperados com sucesso"
+            ),
+            @ApiResponse(responseCode = "404", description = "Álbum/imagens não encontrados", content = @Content)
+    })
+    @Transactional(readOnly = true)
+    @GetMapping("/download/base64/{albumId}")
+    public ResponseEntity<List<AlbumImagemResponse>> downloadBase64(
+            @Parameter(description = "ID do álbum", required = true, in = ParameterIn.PATH)
+            @PathVariable Long albumId) {
+
+        List<AlbumImagem> models = service.downloadByAlbumId(albumId);
+
+        return ResponseEntity.ok().body(models.stream().map(mapper::modelToResponse).toList());
+    }
+
+    @Operation(
             summary = "Download por storage key",
             description = "Baixa um único arquivo pelo identificador (storage key) no storage."
     )
@@ -116,8 +138,8 @@ public class AlbumImagemController {
         AlbumImagem model = service.downloadByStorageKey(key);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + model.getFileName())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + model.getFileName())
+                .contentType(MediaType.parseMediaType(model.getFileContentType()))
                 .body(new InputStreamResource(new ByteArrayInputStream(model.getContent())));
     }
 

@@ -7,7 +7,8 @@ public record AlbumImagemResponse(
         String fileContentType,
         String fileHash,
         String storageKey,
-        String linkPreAssinado
+        String linkPreAssinado,
+        String contentBase64
 ) {
 
 
