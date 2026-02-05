@@ -137,9 +137,9 @@ TOPIC  = /topic/albuns/novos
 processo-seletivo-api/src/main/resources/client-websocket
 ```
 ### Execução:
-Instale o python na maquina
-Instale o pacote websocket
-Rode o script main.py
+- Instale o python na maquina
+- Instale o pacote websocket
+- Rode o script main.py
 
 ---
 
