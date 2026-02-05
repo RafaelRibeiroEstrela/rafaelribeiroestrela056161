@@ -3,6 +3,7 @@ package com.example.processoseletivoapi.services;
 import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.exceptions.ResourceNotFoundException;
 import com.example.processoseletivoapi.models.User;
+import com.example.processoseletivoapi.repositories.RoleRepository;
 import com.example.processoseletivoapi.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,12 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository repository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -30,6 +33,11 @@ public class UserService {
 
     public void updateRoles(Set<Long> rolesId, String username) {
         User model = repository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Nenhum usuário encontrado"));
+        for (Long roleId : rolesId) {
+            if (!roleRepository.existsById(roleId)) {
+                throw new BusinessException("Nenhum role encontrado com id = " + roleId);
+            }
+        }
         model.setRoles(rolesId.toArray(new Long[0]));
         repository.save(model);
     }

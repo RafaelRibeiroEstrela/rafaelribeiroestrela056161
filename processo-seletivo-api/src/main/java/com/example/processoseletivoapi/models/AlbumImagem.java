@@ -21,7 +21,6 @@ public class AlbumImagem {
     private LocalDateTime createdAt;
     @Transient
     private byte[] content;
-    @Transient
     private String linkPreAssinado;
 
     public AlbumImagem() {
@@ -124,6 +123,9 @@ public class AlbumImagem {
     }
 
     public void setLinkPreAssinado(String linkPreAssinado) {
+        if (linkPreAssinado == null || linkPreAssinado.trim().isEmpty()) {
+            throw new BusinessException("O link pré assinado é obrigatório");
+        }
         this.linkPreAssinado = linkPreAssinado;
     }
 }

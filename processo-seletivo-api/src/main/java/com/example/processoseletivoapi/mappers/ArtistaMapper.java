@@ -27,7 +27,7 @@ public class ArtistaMapper {
 
     public ArtistaResponse modelToResponse(ArtistaProjection projection) {
         if (projection == null) return null;
-        return new ArtistaResponse(projection.getId(), projection.getNome(), projection.getQuatidadeDeAlbuns(), null);
+        return new ArtistaResponse(projection.getId(), projection.getNome(), projection.getQuantidadeDeAlbuns(), null);
     }
 
     public ArtistaResponse modelToResponse(Artista model) {

@@ -25,6 +25,7 @@ public class SecurityConfig {
             "/v3/api-docs/swagger-config",
             "/swagger-ui.html",
             "/v1/auth/**",
+            "/minio/miniobucket/**",
             "/actuator/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
