@@ -84,7 +84,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 String token = recoverToken(request);
 
-                tokenService.validateToken(token, TokenTypeEnum.TOKEN);
+                try {
+                    tokenService.validateToken(token, TokenTypeEnum.TOKEN);
+                } catch (TokenException e) {
+                    throw new AuthorizationException(e.getMessage());
+                }
 
                 String username = tokenService.extractSubject(token);
 
