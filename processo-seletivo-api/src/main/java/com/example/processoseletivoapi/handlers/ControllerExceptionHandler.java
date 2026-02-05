@@ -105,19 +105,6 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(standardError);
     }
 
-    @ExceptionHandler(TokenException.class)
-    public ResponseEntity<ErrorResponse> tokenException(TokenException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        ErrorResponse standardError = new ErrorResponse(
-                status.value(),
-                "TokenException",
-                e.getMessage(),
-                LocalDateTime.now(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(status).body(standardError);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exception(Exception e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
