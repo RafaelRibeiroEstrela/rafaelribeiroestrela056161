@@ -36,8 +36,8 @@ public class ArquivoController {
         AlbumImagem model = service.downloadLinkPreAssinado(token);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + model.getFileName())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + model.getFileName())
+                .contentType(MediaType.parseMediaType(model.getFileContentType()))
                 .body(new InputStreamResource(new ByteArrayInputStream(model.getContent())));
     }
 }
