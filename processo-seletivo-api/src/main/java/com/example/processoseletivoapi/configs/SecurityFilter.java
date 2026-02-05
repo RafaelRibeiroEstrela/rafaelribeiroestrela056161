@@ -2,6 +2,7 @@ package com.example.processoseletivoapi.configs;
 
 import com.example.processoseletivoapi.exceptions.AccessLimitException;
 import com.example.processoseletivoapi.exceptions.AuthorizationException;
+import com.example.processoseletivoapi.exceptions.TokenException;
 import com.example.processoseletivoapi.models.Role;
 import com.example.processoseletivoapi.models.User;
 import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;

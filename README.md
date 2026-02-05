@@ -132,10 +132,14 @@ WS_URL = ws://localhost:26000/ws
 TOPIC  = /topic/albuns/novos
 ```
 
-📂 Um **cliente de exemplo em Python** está disponível no diretório:
+📂 Uma SUGESTÃO de **cliente de exemplo em Python** está disponível no diretório:
 ```
-client-websocket/
+processo-seletivo-api/src/main/resources/client-websocket
 ```
+### Execução:
+Instale o python na maquina
+Instale o pacote websocket
+Rode o script main.py
 
 ---
 

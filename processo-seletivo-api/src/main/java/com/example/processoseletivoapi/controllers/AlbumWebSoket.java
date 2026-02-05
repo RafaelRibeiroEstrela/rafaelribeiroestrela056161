@@ -3,7 +3,6 @@ package com.example.processoseletivoapi.controllers;
 import com.example.processoseletivoapi.mappers.AlbumMapper;
 import com.example.processoseletivoapi.models.Album;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 
 @Controller
