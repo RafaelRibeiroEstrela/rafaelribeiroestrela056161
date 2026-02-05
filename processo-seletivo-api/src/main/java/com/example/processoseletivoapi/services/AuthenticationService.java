@@ -5,6 +5,7 @@ import com.example.processoseletivoapi.exceptions.BusinessException;
 import com.example.processoseletivoapi.models.User;
 import com.example.processoseletivoapi.models.enums.TokenTypeEnum;
 import com.example.processoseletivoapi.repositories.UserRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
