@@ -192,5 +192,9 @@ O uso do **Redis** contribui diretamente para segurança, performance e controle
 
 ---
 
+## Vídeo tutorial/demonstrativo caso necessário
+
+```https://drive.google.com/file/d/1xi9vCODNADyZvGZtZ0Cwmdgm8s4U3EaR/view?usp=sharing```
+
 📌 *Obrigado pela oportunidade de participar deste processo seletivo.*
 
